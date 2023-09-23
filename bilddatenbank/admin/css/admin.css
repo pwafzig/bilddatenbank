@@ -1,0 +1,286 @@
+/***********************************************************
+ *
+ * Adminbereich
+ *
+ ***********************************************************/
+
+#adminnav {
+	padding: 0px;
+}
+
+#adminnav li {
+	list-style-type: none;
+	line-height: 25px;
+	border-bottom: 1px solid #a0a0a0;
+}
+
+#adminnav a {
+	font-size: 13px;
+	font-weight: bold;
+}
+
+#admintable {
+	border-collapse: collapse;
+	font-size:12px;
+}
+
+#admintable td {
+	border: 1px solid #a0a0a0;
+	background-color: #FFFFFF;
+	padding: 8px;
+}
+
+#admintable th {
+	border: 1px solid #a0a0a0;
+	background-color: #ebebeb;
+	color: #000000;
+	padding: 8px;
+}
+
+#admintable tr {
+	border: 1px solid #a0a0a0;
+	background-color: #FFFFFF;
+	padding: 8px;
+}
+
+#admintable tr:hover {
+	background-color: #ebebeb;
+}
+
+#admintable a {
+	text-decoration: underline;
+}
+
+
+/***********************************************************
+ *
+ * Tabellensortierung
+ *
+ ***********************************************************/
+
+th.header {
+	background-image: url('/bilddatenbank/admin/images/sort.gif');
+	cursor: pointer;
+	font-weight: bold;
+	background-repeat: no-repeat;
+	background-position: center right;
+	padding-right: 20px;
+	margin-left: -1px;
+}
+
+th.headerSortUp {
+	background-image: url('/bilddatenbank/admin/images/asc.gif');
+	background-color: #deeaf4;
+}
+
+th.headerSortDown {
+	background-image: url('/bilddatenbank/admin/images/desc.gif');
+	background-color: #deeaf4;
+}
+
+/***********************************************************
+ *
+ * Tabellen und Formulare für bin-Dateien
+ *
+ ***********************************************************/
+
+#bintable {
+	padding:20px;
+}
+
+#binform fieldset {
+	background:#ebebeb;
+	padding:10px;
+	margin-bottom:36px;
+	width:100%;
+	border: 0;
+}
+
+#binform input, textarea, select {
+	padding:4px 4px 4px 6px;
+	font-size: 13px;
+	border: 0px;
+}
+
+.submit {
+	padding:4px 4px 4px 6px;
+	font-size: 12px;
+	font-weight: bold;
+	text-transform:uppercase;
+	background-color: #a0a0a0;
+	color: #FFFFFF;
+	border: 0px;
+	-moz-border-radius: 2px;
+	-webkit-border-radius: 2px;
+	padding: 2px 15px 2px 15px;
+}
+
+#binform fieldset.action {
+	background:#ebebeb;
+	margin-top:-20px;
+	border: 0;
+}
+
+#binform legend {
+	background:#ebebeb;
+	border-top: 4px solid #a0a0a0;
+	color: #000000;
+	font-size: 13px;
+	padding:10px;
+	margin:-26px 0 0 -10px;
+	font-weight:bold;
+}
+
+#binform label {
+	font-size:12px;
+	color:#000;
+}
+
+#binform label.opt {
+	font-weight:normal;
+}
+
+#binform label.error {
+	float: none;
+	color: red;
+	padding-left: .5em;
+	vertical-align: top;
+}
+
+#validateUsername {
+	font-size:12px;
+	float: none;
+	color: red;
+	padding-left: .5em;
+	vertical-align: top;
+}
+
+#binform dl {
+	clear:both;
+	border-top: 1px solid #a0a0a0;
+	padding-top:8px;
+}
+
+#binform dt {
+	float:left;
+	text-align:right;
+	width:150px;
+	line-height:25px;
+	margin:0 10px 10px 0;
+}
+
+#binform dd {
+	float:left;
+	width:600px;
+	line-height:25px;
+	margin:0 0 10px 0;
+}
+
+/***********************************************************
+ *
+ * Tabellen und Formulare für Konfigurationsseite
+ *
+ ***********************************************************/
+
+#konfigform fieldset {
+	padding:10px;
+	width:100%;
+	border: 0;
+}
+
+#konfigform input, textarea, select {
+	padding:4px 4px 4px 6px;
+	font-size: 13px;
+	border: 1px solid #a0a0a0;
+	width:350px;
+}
+
+.submit {
+	padding:4px 4px 4px 6px;
+	font-size: 12px;
+	font-weight: bold;
+	text-transform:uppercase;
+	background-color: #a0a0a0;
+	color: #FFFFFF;
+	border: 0px;
+	-moz-border-radius: 2px;
+	-webkit-border-radius: 2px;
+	padding: 2px 15px 2px 15px;
+}
+
+#konfigform fieldset.action {
+	margin-top:-20px;
+	border: 0;
+}
+
+#konfigform legend {
+	color: #000000;
+	font-size: 13px;
+	padding:10px;
+	margin:0 0 -10px -10px;
+	font-weight:bold;
+}
+
+#konfigform label {
+	font-size:12px;
+	color:#000;
+}
+
+#konfigform label.opt {
+	font-weight:normal;
+}
+
+#konfigform label.error {
+	float: none;
+	color: red;
+	padding-left: .5em;
+	vertical-align: top;
+}
+
+#konfigform dl {
+	clear:both;
+	border-top: 1px solid #a0a0a0;
+	padding-top:8px;
+	width:95%;
+}
+
+#konfigform dt {
+	float:left;
+	text-align:right;
+	width:350px;
+	line-height:25px;
+	margin:0 10px 10px 0;
+}
+
+#konfigform dd {
+	float:left;
+	line-height:25px;
+	margin:0 0 10px 0;
+}
+
+.pagination {
+	float:left;
+	height:14px;
+}
+
+.pagination a {
+	font-family:verdana,arial,helvetica,sans-serif;
+	font-size:11px;
+	font-weight:bold;
+	_padding: 5px 6px 6px 6px;
+	padding: 1px 6px 2px 6px;
+	text-decoration:none;
+	background-color:#000;
+	margin-right:6px;
+	color:ffffff;
+	font-weight:bold;
+	-moz-border-radius: 5px;
+	-webkit-border-radius: 5px;
+}
+
+.pagination a:hover {
+	color:#000;
+	background-color:#e9e9e9;
+}
+
+

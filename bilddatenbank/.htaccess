@@ -1,0 +1,9 @@
+RewriteEngine On
+
+RewriteRule tags/(.*) /bilddatenbank/index.php?q=$1&k=yes [L,QSA]
+RewriteRule collection/(.*) /bilddatenbank/index.php?q=$1&c=yes&rewrite=true [L,QSA] 
+
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteRule . /bilddatenbank/index.php?q=%{REQUEST_URI}&rewrite=true [L,QSA]
+
