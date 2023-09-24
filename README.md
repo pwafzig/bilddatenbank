@@ -40,6 +40,14 @@ Als Vorbereitung zur Installation muss geklärt werden, ob der Webserver die not
 - Absicherung Adminbereich (Empfehlung: .htaccess-Schutz auf /admin)
 - Stabilität Bildimport daemon.php - bei leeren IPTC-Felder ist der Import nicht ausreichend fehlertolerant
 
+### Installation
+
+- Webserver, Datenbank und benötigte Pakete (s.o.) installieren
+- Datenbank und Benutzer für Datenbankzugriff anlegen 
+- per SSH in das Dokumentenverzeichnis wechseln
+- Aktuelles Repository clonen mit ```git clone https://github.com/pwafzig/bilddatenbank.git .```
+- https://www.domain.de/bilddatenbank/install/ aufrufen und die Installationsroutine ausführen
+
 ### Lizenz
 Verfügbar unter der GNU General Public License 3 (https://www.gnu.org/licenses/gpl-3.0.html).
 
