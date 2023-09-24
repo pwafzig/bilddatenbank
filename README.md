@@ -36,6 +36,7 @@ Als Vorbereitung zur Installation muss geklärt werden, ob der Webserver die not
 ### Know Bugs
 
 - Kompatibilität zu neueren PHP-Versionen (>= PHP 7)
+- jQuery und phpMailer Versionen veraltet
 - Absicherung Adminbereich (Empfehlung: .htaccess-Schutz auf /admin)
 - Stabilität Bildimport daemon.php - bei leeren IPTC-Felder ist der Import nicht ausreichend fehlertolerant
 
