@@ -46,6 +46,7 @@ Als Vorbereitung zur Installation muss geklärt werden, ob der Webserver die not
 - Datenbank und Benutzer für Datenbankzugriff anlegen 
 - per SSH in das Dokumentenverzeichnis wechseln
 - Aktuelles Repository clonen mit ```git clone https://github.com/pwafzig/bilddatenbank.git .```
+- **Alternativ:** Daten als ZIP herunterladen, entpacken und per FTP auf den Webserver übertragen
 - https://www.domain.de/bilddatenbank/install/ aufrufen und die Installationsroutine ausführen
 
 ### Lizenz
