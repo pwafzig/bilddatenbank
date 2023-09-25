@@ -99,7 +99,7 @@
 		echo "Die Funktion GDLib ist vorhanden... <span class=\"okay\">OK</span><br />";
 	}
 
-	if (!function_exists("mysql_query") && !function_exists("mysqli_set_charset")) {
+	if (!function_exists("mysqli_query") && !function_exists("mysqli_set_charset")) {
     	echo "Die Bilddatenbank benötigt eine MySQL Datenbank, es sind aber weder <a href=\"http://php.net/mysql\">MySQL</a> oder die <a href=\"http://php.net/mysqli\">MySQLi</a> Erweiterung installiert.";
     	exit;
     } else {
@@ -270,7 +270,7 @@
 
 	//Datenbankverbindung aufbauen
 
-	$link = mysql_connect($_POST['dbhost'], $_POST['dbuser'], $_POST['dbpass']);
+	$link = mysqli_connect($_POST['dbhost'], $_POST['dbuser'], $_POST['dbpass']);
 	if (!$link) {
 		echo "Verbindung mit den angegebenen Daten nicht möglich... <span class=\"fault\">FEHLER</span><br >";
 		exit;
@@ -278,7 +278,7 @@
 		echo "Verbindungsdaten korrekt... <span class=\"okay\">OK</span><br />";
 	}
 
-	$db_selected = mysql_select_db($_POST['dbname'], $link);
+	$db_selected = mysqli_select_db($link, $_POST['dbname']);
 	if (!$db_selected) {
 		echo "Die Datenbank ".$_POST['dbname']." exisitiert nicht... <span class=\"fault\">FEHLER</span><br />";
 		exit;
@@ -294,15 +294,15 @@
 	$import = preg_replace ("%^--(.*)\n%mU", '', $import);
 	$import = preg_replace ("%^$\n%mU", '', $import);
 
-	mysql_real_escape_string($import);
+	mysqli_real_escape_string($link, $import);
 	$import = explode (";", $import);
 
 	foreach ($import as $imp){
 	if ($imp != '' && $imp != ' '){
-		$result = mysql_query($imp);
+		$result = mysqli_query($link, $imp);
 
 			if(!$result) {
-				echo "Fehler beim Einrichten der Datenbank... <span class=\"fault\">FEHLER</span><br /><pre>".mysql_error()."</pre>";
+				echo "Fehler beim Einrichten der Datenbank... <span class=\"fault\">FEHLER</span><br /><pre>".mysqli_error()."</pre>";
 				exit;
 			} else {
 				$out = "Datenbank eingerichtet... <span class=\"okay\">OK</span><br />";
@@ -323,6 +323,8 @@
 
 	//Templates laden und Dateien schreiben
 	//config.inc.php
+
+	$shebang = $_POST['shebang'];
 
 	$config = file_get_contents("templates/config.inc.php");
 	$config = preg_replace("/@@INSTALLPATH@@/", $_POST['installpath'], $config);
