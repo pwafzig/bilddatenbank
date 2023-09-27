@@ -1,6 +1,6 @@
 <?php
 
- 	    mysql_query("SET CHARACTER SET 'utf8'");
+ 	    mysqli_query($link, "SET CHARACTER SET 'utf8'");
 
  	    //Seitenzahl festlegen bzw. am Anfang nullen
 	    if(!isset($_GET['page'])){
@@ -23,11 +23,11 @@
 
 		//Rewrite-Suche
  	    if(isset($_GET['rewrite'])){
-			$q = mysql_real_escape_string($_GET['q']);
+			$q = mysqli_real_escape_string($link, $_GET['q']);
 			$q = preg_replace("/\/bilddatenbank\//", "", $q);
 
 			$stmt_thumbs = "SELECT SQL_CALC_FOUND_ROWS id, filename, headline, keywords, object_name, caption, transref, photographer, date, city, picsize FROM picture_data WHERE transref = '$q' ORDER BY date DESC, time DESC LIMIT 0,".$maxfiles."";
-			$query_thumbs = mysql_query($stmt_thumbs);
+			$query_thumbs = mysqli_query($link, $stmt_thumbs);
  	    }
 
  	    //Volltext-Suche 	    
@@ -35,8 +35,10 @@
 
 			//Ergaenzung durch eine Jahreszahl…
  	    	if(isset($_GET['year'])){
-				$year = mysql_real_escape_string(trim($_GET['year']));
+				$year = mysqli_real_escape_string($link, trim($_GET['year']));
 				$dateselect = " AND (date LIKE '".$year."%')";
+			} else {
+				$dateselect = " ";
 			}
 
 			$q = strtolower($_GET['q']);
@@ -47,7 +49,7 @@
 
 			//Suchstring anpassen
 			$stopwords = array();
-			$stopwordfile = $_SERVER['DOCUMENT_ROOT'].INSTALLPATH."/lib/stoppwords_en.txt";
+			$stopwordfile = $_SERVER['DOCUMENT_ROOT']."/".INSTALLPATH."/lib/stoppwords_en.txt";
 
 			$handle = fopen ($stopwordfile, "r");
 			while (!feof($handle)) {
@@ -56,7 +58,7 @@
 			}
 			fclose ($handle);
 
-			$stopwordfile = $_SERVER['DOCUMENT_ROOT'].INSTALLPATH."/lib/stoppwords_de.txt";
+			$stopwordfile = $_SERVER['DOCUMENT_ROOT']."/".INSTALLPATH."/lib/stoppwords_de.txt";
 
 			$handle = fopen ($stopwordfile, "r");
 			while (!feof($handle)) {
@@ -69,13 +71,13 @@
 			$condition = preg_replace("/@@q@@/", $q, $where);
 			$stmt_thumbs = "SELECT SQL_CALC_FOUND_ROWS id, filename, headline, keywords, object_name, transref, photographer, picsize, city, date FROM picture_data WHERE (".$condition.")".$dateselect." ORDER BY date DESC, time DESC LIMIT 0,".$maxfiles."";		
 
-			$query_thumbs = mysql_query($stmt_thumbs);
+			$query_thumbs = mysqli_query($link, $stmt_thumbs);
 	
 		}
 
 		//Datumssuche
  	    elseif(isset($_GET['date'])){
-	  		$date = explode("-", mysql_real_escape_string($_GET['date']));
+	  		$date = explode("-", mysqli_real_escape_string($link, $_GET['date']));
 	  		$startdate = $date[0];
 	  		$enddate   = $date[1];
 
@@ -91,21 +93,21 @@
 
 			//Keyword-Suche
  	    elseif(isset($_GET['key'])){
-			$q = mysql_real_escape_string($_GET['key']);
+			$q = mysqli_real_escape_string($link, $_GET['key']);
     		$stmt_thumbs = "SELECT SQL_CALC_FOUND_ROWS id, filename, headline, keywords, object_name, transref, photographer, city, date, picsize FROM picture_data WHERE keywords LIKE '%".$q."%' ORDER BY date DESC, time DESC LIMIT 0,".$maxfiles."";
 			$query_thumbs = mysql_query($stmt_thumbs);
  	    }
 
 			//Collection-Suche
  	    elseif(isset($_GET['collection'])){
-			$q = mysql_real_escape_string($_GET['collection']);
+			$q = mysqli_real_escape_string($link, $_GET['collection']);
 			$q = preg_replace("/\/bilddatenbank\//", "", $q);
 			$q = preg_replace("/_/", " ", $q);
-			$query_collection = mysql_query("SELECT * FROM collections WHERE name = '".$q."'");
-			$out_collection = mysql_fetch_array($query_collection);
+			$query_collection = mysqli_query($link, "SELECT * FROM collections WHERE name = '".$q."'");
+			$out_collection = mysqli_fetch_array($query_collection);
 
 			$stmt_thumbs = "SELECT SQL_CALC_FOUND_ROWS id, filename, headline, keywords, object_name, transref, photographer, city, date, picsize FROM picture_data WHERE id IN (".$out_collection['ids'].") ORDER BY object_name ASC LIMIT 0,".$maxfiles."";
-			$query_thumbs = mysql_query($stmt_thumbs);
+			$query_thumbs = mysqli_query($link, $stmt_thumbs);
  	    }
 
 		//Datenfeld-Suche
@@ -115,20 +117,20 @@
 			$value = $q[1];
 
 			$stmt_thumbs = "SELECT SQL_CALC_FOUND_ROWS id, filename, headline, keywords, object_name, transref, photographer, picsize FROM picture_data WHERE (".$type." LIKE '%".$value."%') ORDER BY date DESC, time DESC LIMIT 0,".$maxfiles."";
-			$query_thumbs = mysql_query($stmt_thumbs);
+			$query_thumbs = mysqli_query($link, $stmt_thumbs);
  	    }
 
 		//Darstellung aller Galerien mit Paginierung
 		else {
 			$stmt_thumbs = "SELECT SQL_CALC_FOUND_ROWS id, filename, headline, keywords, object_name, transref, photographer, picsize, city, date FROM picture_data GROUP BY transref, city, date ORDER BY date DESC, time DESC LIMIT ".$start.",".$anzthumbs."";
-			$query_thumbs = mysql_query($stmt_thumbs);
+			$query_thumbs = mysqli_query($link, $stmt_thumbs);
 			//View ueberschreiben
 			$view = "gallery";
 		}
 
 		$stmt_count_thumbs = "Select FOUND_ROWS()";
-		$query_count_thumbs = mysql_query($stmt_count_thumbs);
-		$num_files = mysql_result($query_count_thumbs, 0);
+		$query_count_thumbs = mysqli_query($link, $stmt_count_thumbs);
+		$num_files = mysqli_num_rows($query_count_thumbs);
 
 		//Wenn keine Ergebnisse vorhanden sind, auf die Fehlerseite weiterleiten
 		if($num_files == 0){
@@ -147,10 +149,10 @@
 		if($view == "single"){
 			
 			//Überschrift erzeugen
-			$query_title = "SELECT object_name FROM picture_data WHERE transref = '$q'";
-			$result_title = mysql_query($query_title);
-			$out_title = mysql_fetch_row($result_title);
-			$title_gallery = $out_title[0];
+			$query_title = "SELECT object_name FROM picture_data WHERE transref = '$q' LIMIT 1";
+			$result_title = mysqli_query($link, $query_title);
+			$out_title = mysqli_fetch_array($result_title, MYSQLI_ASSOC);
+			$title_gallery = $out_title['object_name'];
 			
 			$thumbs .= "<h1>".$title_gallery."</h1>";
 		
@@ -158,12 +160,12 @@
 			if(isset($_GET['rewrite'])){
 
 				if(isset($_SESSION['accessid']) OR isset($_SESSION['login'])){
-					$query_zips = mysql_query($stmt_thumbs);
+					$query_zips = mysqli_query($link, $stmt_thumbs);
 
 					$thumbs .= "<form action=\"/".INSTALLPATH."/zipdownload.php\" method=\"POST\">";
 					$thumbs .= "<tr><td colspan=\"5\" valign=\"top\" align=\"left\">";
 
-						while ($zipout = mysql_fetch_array($query_zips)){
+						while ($zipout = mysqli_fetch_array($query_zips, MYSQLI_ASSOC)){
 							$thumbs .= "<input type=\"hidden\" name=\"zip[]\" value=\"".$zipout['filename']."\">";
 						}
 
@@ -180,7 +182,7 @@
 		$thumbs .= "<tr><td colspan=\"5\">\n";
 		$thumbs .= "<div>\n";
 
-		while ($out = mysql_fetch_array($query_thumbs)){
+		while ($out = mysqli_fetch_array($query_thumbs, MYSQLI_ASSOC)){
 
 			$size = @getimagesize($_SERVER['DOCUMENT_ROOT']."/".INSTALLPATH."/thumbs/".$out['filename']);
 
@@ -231,10 +233,10 @@
 			$thumbs .= "<tr><td colspan=\"5\">\n";
 			$thumbs .= "<div>\n";
 
-			while ($out = mysql_fetch_array($query_thumbs)){
+			while ($out = mysqli_fetch_array($query_thumbs, MYSQLI_ASSOC)){
 				$stmt_details = "SELECT COUNT(id) FROM picture_data where (transref = '".$out['transref']."')";
-				$query_details = mysql_query($stmt_details);
-				$num_files_details = mysql_fetch_array($query_details);
+				$query_details = mysqli_query($link, $stmt_details);
+				$num_files_details = mysqli_fetch_array($query_details, MYSQLI_ASSOC);
 				
 				if(strlen($out['object_name']) > 50){
 					$object_name = substr($out['object_name'], 0, 50)."...";

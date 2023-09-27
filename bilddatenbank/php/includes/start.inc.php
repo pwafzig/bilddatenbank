@@ -41,13 +41,13 @@
 
 	include(DOCROOT.INSTALLPATH."/secure/dbconnect.inc.php");
 
-    $link = @mysql_connect(DB_HOST, DB_USER, DB_PWD);
+    $link = mysqli_connect(DB_HOST, DB_USER, DB_PWD);
     if (!$link) {
     	include("lib/notfound.html");
         exit;
     }
 
-    $db_selected = @mysql_select_db(DB_NAME, $link);
+    $db_selected = mysqli_select_db($link, DB_NAME);
     if (!$db_selected) {
         include("lib/notfound.html");
         exit;
@@ -59,10 +59,10 @@
 
 	//Alle Werte aus der Konfigurationstabelle lesen
 	$stmt = "SELECT * FROM konfig";
-	$query = mysql_query($stmt);
+	$query = mysqli_query($link, $stmt);
 
-	while($out = mysql_fetch_array($query)){
-		$CONFIG[$out[1]] = $out[2];
+	while($out = mysqli_fetch_array($query, MYSQLI_NUM)){
+		$CONFIG[$out[1]] = $out[2] ?? null;
 	}
 
 
@@ -97,7 +97,7 @@
     /**************** Admin-Login absichern ***************/
 
     if(preg_match("/admin/", $_SERVER['PHP_SELF']) && !preg_match("/admin\/login.php/", $_SERVER['PHP_SELF'])){
-	    if(!isset($_SESSION[adminlogin])){
+	    if(!isset($_SESSION['adminlogin'])){
     	   	header("Location:http://".$_SERVER['HTTP_HOST']."/".INSTALLPATH."/admin/login.php");
     	   	exit;
     	}
@@ -116,11 +116,11 @@
             $accessid = $_GET['accessid'];
         }
 
-        $accessid = mysql_real_escape_string($accessid);
+        $accessid = mysqli_real_escape_string($link, $accessid);
 
         $stmt_access = "SELECT * FROM accessids WHERE hash = '".$accessid."'";
-        $query_access = mysql_query($stmt_access);
-        $result_access = mysql_fetch_array($query_access);
+        $query_access = mysqli_query($link, $stmt_access);
+        $result_access = mysqli_fetch_array($query_access, MYSQLI_ASSOC);
 
         //Aktuelles Datum feststellen und mit hinterlegtem Datum vergleichen, um Ablauf festzustellen
         $actdate = date("Ymd");
@@ -130,7 +130,7 @@
         }
 
         $stmt_log = "UPDATE accessids SET lastlogin = NOW( ) WHERE hash = '".$accessid."' LIMIT 1";
-        @mysql_query($stmt_log);
+        mysqli_query($link, $stmt_log);
 
         $_SESSION['login']          =   "Access-ID";
         $_SESSION['name']           =   $result_access['name'];

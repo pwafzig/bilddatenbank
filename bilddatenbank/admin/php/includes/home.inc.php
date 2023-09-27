@@ -1,13 +1,13 @@
 <?php
-    if(!isset($_SESSION[adminlogin])){
+    if(!isset($_SESSION['adminlogin'])){
    	   	exit;
    	}
 ?>
 <h1>Übersicht</h1><br />
 <?php
 	//Statistiken ausgeben
-	$stmt = mysql_query("SELECT id FROM picture_data");
-	$num = mysql_num_rows($stmt);
+	$stmt = mysqli_query($link, "SELECT id FROM picture_data");
+	$num = mysqli_num_rows($stmt);
 
 	echo "<p>Die Datenbank enthält derzeit <strong>$num Dateien</strong>.";
 

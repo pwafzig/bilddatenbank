@@ -1,5 +1,5 @@
 <?php
-    if(!isset($_SESSION[adminlogin])){
+    if(!isset($_SESSION['adminlogin'])){
    	   	exit;
    	}
    	
@@ -36,7 +36,7 @@ function NixMarkieren(){
 </script>
 <?php
 
-    mysql_query("SET CHARACTER SET 'utf8'");
+    mysqli_query($link, "SET CHARACTER SET 'utf8'");
 
     //Seitenzahl festlegen bzw. am Anfang nullen
     if(!isset($_GET['page'])){
@@ -55,20 +55,20 @@ function NixMarkieren(){
     if(!isset($_POST['q'])){
 
             $stmt_thumbs = "SELECT SQL_CALC_FOUND_ROWS id, filename, headline, photographer, picsize, timestamp FROM picture_data ORDER BY filename DESC LIMIT ".$start.",".$anzthumbs."";
-            $query_thumbs = mysql_query($stmt_thumbs);
+            $query_thumbs = mysqli_query($link, $stmt_thumbs);
 
             $stmt_count_thumbs = "Select FOUND_ROWS()";
-            $query_count_thumbs = mysql_query($stmt_count_thumbs);
-            $num_files = mysql_result($query_count_thumbs, 0);
+            $query_count_thumbs = mysqli_query($link, $stmt_count_thumbs);
+            $num_files = mysqli_num_rows($query_count_thumbs);
 
     //Wenn ja, dann Suchstatement zusammenbauen
     } else {
             $stmt_thumbs = "SELECT SQL_CALC_FOUND_ROWS id, filename, headline, photographer, picsize, timestamp FROM picture_data WHERE MATCH (filename, caption, headline, photographer, city, state, country, keywords, location) AGAINST ('*".$_POST['q']."*' IN BOOLEAN MODE) ORDER BY filename DESC LIMIT ".$start.",".$anzthumbs."";
-            $query_thumbs = mysql_query($stmt_thumbs);
+            $query_thumbs = mysqli_query($link, $stmt_thumbs);
 
             $stmt_count_thumbs = "Select FOUND_ROWS()";
-            $query_count_thumbs = mysql_query($stmt_count_thumbs);
-            $num_files = mysql_result($query_count_thumbs, 0);
+            $query_count_thumbs = mysqli_query($link, $stmt_count_thumbs);
+            $num_files = mysqli_num_rows($query_count_thumbs);
 
     }
 
@@ -80,7 +80,7 @@ function NixMarkieren(){
     if($num_files == 0){
         $html .= "<tr><td colspan=\"5\" height=\"350\">".$no_search_results."</td></tr>";
     } else {
-        while ($out = mysql_fetch_array($query_thumbs)){
+        while ($out = mysqli_fetch_array($query_thumbs, MYSQLI_ASSOC)){
         	$html .= "<tr><td align=\"center\">".$out['id']."</td>";
         	$html .= "<td align=\"center\"><a href=\"/".INSTALLPATH."/admin/bin/showimgdetails.php?id=".$out['id']."&width=170\" class=\"jTip\" id=\"".$out['id']."\" name=\"Vorschau:\"><img src=\"/".INSTALLPATH."/thumbs/".$out['filename']."\" border=\"0\" width=\"33\" height=\"22\"/></a></td>";
         	$html .= "<td>".$out['headline']."</td>";

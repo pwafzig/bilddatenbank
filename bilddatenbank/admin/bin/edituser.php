@@ -22,9 +22,9 @@
 				$stmt = "UPDATE users SET login = '".$_POST['login']."', name = '".$_POST['name']."', organisation = '".$_POST['organisation']."', email = '".$_POST['email']."', resolution = '".$_POST['resolution']."' WHERE id = ".$_POST['id']." LIMIT 1";
 			}
 
-			$query = mysql_query($stmt);
+			$query = mysqli_query($link, $stmt);
 			if (!$query) {
-    			die('Datenbankfehler: ' . mysql_error());
+    			die('Datenbankfehler: ' . mysqli_error($link));
 			} else {
 				echo "Die Daten wurden korrekt in der Datenbank ge&auml;ndert. <button onclick=\"self.parent.tb_remove(); parent.window.location.href='/".INSTALLPATH."/admin/index.php?sect=benutzer';\" class=\"submit\">Schlie&szlig;en</button>";
 			}
@@ -32,8 +32,8 @@
 
 		//Benutzerdaten aus DB lesen
 		$stmt = "SELECT * FROM users WHERE id='".$_GET['id']."'";
-		$query = mysql_query($stmt);
-		$out = mysql_fetch_row($query);
+		$query = mysqli_query($link, $stmt);
+		$out = mysqli_fetch_row($query);
 
 		//Formular anzeigen	?>
 
@@ -103,6 +103,10 @@
         				<dt><label for="email">Email:</label></dt>
             			<dd><input type="text" name="email" id="email" size="32" maxlength="128" value="<?php echo $out[6]?>" /></dd>
         			</dl>
+        			<dl>
+        				<dt><label for="lang">Sprache:</label></dt>
+            			<dd><input type="radio" name="lang" id="lang" value="de" /> DE&nbsp;<input type="radio" name="lang" id="lang" value="en" /> EN</dd>
+        			</dl>
 					<dl>
         				<dt><label for="login">Login:</label></dt>
             			<dd><input type="text" name="login" id="login" size="32" maxlength="128" value="<?php echo $out[1]?>" /></dd>
@@ -136,10 +140,10 @@
 	if(isset($_GET['action']) && $_GET['action'] == "add"){
 
 		if(isset($_POST['sent']) && $_POST['sent'] == "yes"){
-			$stmt = "INSERT INTO users (id, login, passwort, name, prename, organisation, email, resolution, downloads, timestamp, lastlogin) VALUES (NULL, '".$_POST['login']."', MD5('".$_POST['password']."'), '".$_POST['name']."', '', '".$_POST['organisation']."', '".$_POST['email']."', '".$_POST['resolution']."', '0', CURRENT_TIMESTAMP, '0000-00-00 00:00:00');";
-			$query = mysql_query($stmt);
+			$stmt = "INSERT INTO users (id, login, passwort, name, prename, organisation, email, lang, resolution, downloads, timestamp, lastlogin) VALUES (NULL, '".$_POST['login']."', MD5('".$_POST['password']."'), '".$_POST['name']."', '', '".$_POST['organisation']."', '".$_POST['email']."', '".$_POST['lang']."', '".$_POST['resolution']."', '0', CURRENT_TIMESTAMP, '0000-00-00 00:00:00');";
+			$query = mysqli_query($link, $stmt);
 			if (!$query) {
-    			die('Datenbankfehler: ' . mysql_error());
+    			die('Datenbankfehler: ' . mysqli_error($link));
 			} else {
 				echo "Der Benutzer wurde korrekt in die Datenbank eingef&uuml;gt. <button onclick=\"self.parent.tb_remove(); parent.window.location.href='/".INSTALLPATH."/admin/index.php?sect=benutzer';\" class=\"submit\">Schlie&szlig;en</button>";
 			}
@@ -290,6 +294,10 @@
             			<dd><input type="text" name="email" id="email" size="32" maxlength="128" value="" /></dd>
         			</dl>
 					<dl>
+        				<dt><label for="lang">Sprache:</label></dt>
+            			<dd><input type="radio" name="lang" id="lang" value="de" /> DE&nbsp;<input type="radio" name="lang" id="lang" value="en" /> EN</dd>
+        			</dl>
+					<dl>
         				<dt><label for="login">Login:</label></dt>
             			<dd><input type="text" name="login" id="login" size="32" maxlength="128" value="" /><span id="validateUsername"></span></dd>
         			</dl>
@@ -324,8 +332,8 @@
 
 			//Benutzerdaten aus DB lesen
 			$stmt = "SELECT * FROM users WHERE id='".$_GET['id']."'";
-			$query = mysql_query($stmt);
-			$out = mysql_fetch_row($query);
+			$query = mysqli_query($link, $stmt);
+			$out = mysqli_fetch_row($query);
 
 			$confirm = md5($out[1]);
 
@@ -338,16 +346,16 @@
 
 			//Benutzerdaten aus DB lesen
 			$stmt = "SELECT * FROM users WHERE id='".$_GET['id']."'";
-			$query = mysql_query($stmt);
-			$out = mysql_fetch_row($query);
+			$query = mysqli_query($link, $stmt);
+			$out = mysqli_fetch_row($query);
 
 			$check = md5($out[1]);
 
 			if($check == $_GET['confirm']){
 				$stmt = "DELETE FROM users WHERE id = ".$out[0]." LIMIT 1";
-				$query = mysql_query($stmt);
+				$query = mysqli_query($link, $stmt);
 				if (!$query) {
-    				die('Datenbankfehler: ' . mysql_error());
+    				die('Datenbankfehler: ' . mysqli_error($link));
 				} else {
 					echo "Benutzer wurde gel&ouml;scht. <button onclick=\"self.parent.tb_remove(); parent.window.location.href='/".INSTALLPATH."/admin/index.php?sect=benutzer';\" class=\"submit\">Schlie&szlig;en</button>";
 				}

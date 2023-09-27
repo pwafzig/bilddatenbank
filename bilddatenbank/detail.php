@@ -2,19 +2,19 @@
 <?php include(DOCROOT.INSTALLPATH."/php/includes/doctype.inc.php"); ?>
 <html>
 <?php
-	mysql_query("SET CHARACTER SET 'utf8'");
+	mysqli_query($link, "SET CHARACTER SET 'utf8'");
 
 	if(isset($_GET['id'])){
 		if(preg_match("/[0-9]/",$_GET['id'])){
-			$id = mysql_real_escape_string($_GET['id']);
+			$id = mysqli_real_escape_string($link, $_GET['id']);
 		} else {
 			exit;
 		}
 	}
 
 	$stmt_popup = "SELECT * FROM picture_data WHERE id = '$id'";
-	$query_popup = mysql_query($stmt_popup);
-	$result_popup = mysql_fetch_array($query_popup);
+	$query_popup = mysqli_query($link, $stmt_popup);
+	$result_popup = mysqli_fetch_array($query_popup, MYSQLI_ASSOC);
 
 	//Keywords formatieren
 	$keywords = explode(", ", $result_popup['keywords']);
@@ -36,12 +36,12 @@
 	$printysize = ceil(($ysize/150)*2.54);
 
 	$stmt_prev = "SELECT id, date, time FROM picture_data WHERE ((object_name = '".$result_popup['object_name']."') AND (time > '".$result_popup['time']."')) ORDER BY date ASC, time ASC LIMIT 1";
-	$query_prev = mysql_query($stmt_prev);
-	$result_prev = mysql_fetch_array($query_prev);
+	$query_prev = mysqli_query($link, $stmt_prev);
+	$result_prev = mysqli_fetch_array($query_prev, MYSQLI_ASSOC);
 
 	$stmt_next = "SELECT id, date, time FROM picture_data WHERE ((object_name = '".$result_popup['object_name']."') AND (time < '".$result_popup['time']."')) ORDER BY date DESC, time DESC LIMIT 1";
-	$query_next = mysql_query($stmt_next);
-	$result_next = mysql_fetch_array($query_next);
+	$query_next = mysqli_query($link, $stmt_next);
+	$result_next = mysqli_fetch_array($query_next, MYSQLI_ASSOC);
 
 	//Rueckmeldung des Mailers umsetzen
 	if(isset($_GET['mail_ok'])){

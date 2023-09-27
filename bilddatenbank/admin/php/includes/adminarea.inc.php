@@ -1,5 +1,5 @@
 <?php
-    if(!isset($_SESSION[adminlogin])){
+    if(!isset($_SESSION['adminlogin'])){
    	   	exit;
    	}
     

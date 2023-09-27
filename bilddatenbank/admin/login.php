@@ -75,8 +75,8 @@
 <?php } else {
 
 	$stmt = "SELECT * FROM konfig";
-	$query = mysql_query($stmt);
-	while($out = mysql_fetch_array($query)){
+	$query = mysqli_query($link, $stmt);
+	while($out = mysqli_fetch_array($query, MYSQLI_ASSOC)){
 		$CONFIG[$out[1]] = $out[2];
 	}
 
