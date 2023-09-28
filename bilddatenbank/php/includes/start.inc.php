@@ -1,16 +1,5 @@
 <?php
 
-	/**************** Error-Reporting einstellen *****************/
-
-	if(isset($_GET['debug']) && $_GET['debug'] == "true") $debug = $_GET['debug'];
-
-	if(!isset($debug)){
-		error_reporting(E_ALL & E_NOTICE & E_STRICT);
-		ini_set("display_errors", "on");
-	}
-
-
-
 	/**************** Basiskonfiguration einlesen *****************/
 
 	$installcheck = file_get_contents($_SERVER['DOCUMENT_ROOT']."/config.inc.php");
@@ -20,6 +9,15 @@
     } else {
 		include($_SERVER['DOCUMENT_ROOT']."/config.inc.php");
 	}
+
+
+
+    /**************** Error-Reporting einstellen *****************/
+
+    if(!DEBUG == "true"){
+        error_reporting(E_ALL & E_NOTICE & E_STRICT);
+        ini_set("display_errors", "on");
+    }
 
 
 

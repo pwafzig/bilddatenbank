@@ -139,10 +139,6 @@
 			exit;
 		}
 
-		if($_GET['debug'] == TRUE){
-			echo $stmt_thumbs;
-		}
-
 		//Ausgabestring initialisieren
 		$thumbs = "";
 
