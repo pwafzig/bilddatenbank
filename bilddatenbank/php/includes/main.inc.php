@@ -42,43 +42,49 @@
 
 			$q = secure_input($_GET['q']);
 
-			$title_gallery = "Suche nach: ".$q;
+			if(strlen($q) > 2){
 
-			//Ergaenzung durch eine Jahreszahl…
- 	    	if(isset($_GET['year'])){
-				$year = mysqli_real_escape_string($link, trim($_GET['year']));
-				$dateselect = " AND (date LIKE '".$year."%')";
+				$title_gallery = "Suche nach: ".$q;
+
+				//Ergaenzung durch eine Jahreszahl…
+	 	    	if(isset($_GET['year'])){
+					$year = mysqli_real_escape_string($link, trim($_GET['year']));
+					$dateselect = " AND (date LIKE '".$year."%')";
+				} else {
+					$dateselect = " ";
+				}
+
+				$where = "(headline LIKE '%@@q@@%') OR (caption LIKE '%@@q@@%') OR (photographer LIKE '%@@q@@%') OR (location LIKE '%@@q@@%') OR (city LIKE '%@@q@@%') OR (keywords LIKE '%@@q@@%')";
+
+				//Suchstring anpassen
+				$stopwords = array();
+				$stopwordfile = $_SERVER['DOCUMENT_ROOT']."/".INSTALLPATH."/lib/stoppwords_en.txt";
+
+				$handle = fopen ($stopwordfile, "r");
+				while (!feof($handle)) {
+					$buffer = fgets($handle, 512);
+					array_push($stopwords, ltrim(rtrim(strtolower($buffer))));
+				}
+				fclose ($handle);
+
+				$stopwordfile = $_SERVER['DOCUMENT_ROOT']."/".INSTALLPATH."/lib/stoppwords_de.txt";
+
+				$handle = fopen ($stopwordfile, "r");
+				while (!feof($handle)) {
+					$buffer = fgets($handle, 512);
+					array_push($stopwords, ltrim(rtrim(strtolower($buffer))));
+				}
+				fclose ($handle);
+
+				$q = preg_replace("/\"/iu", "", $q);
+				$condition = preg_replace("/@@q@@/", $q, $where);
+				$stmt_thumbs = "SELECT SQL_CALC_FOUND_ROWS id, filename, headline, keywords, object_name, transref, photographer, picsize, city, date FROM picture_data WHERE (".$condition.")".$dateselect." ORDER BY id ASC LIMIT 0,".$maxfiles."";		
+
+				$query_thumbs = mysqli_query($link, $stmt_thumbs);
+
 			} else {
-				$dateselect = " ";
+				header("Location: /".INSTALLPATH."/nosearch.html");
 			}
-
-			$where = "(headline LIKE '%@@q@@%') OR (caption LIKE '%@@q@@%') OR (photographer LIKE '%@@q@@%') OR (location LIKE '%@@q@@%') OR (city LIKE '%@@q@@%') OR (keywords LIKE '%@@q@@%')";
-
-			//Suchstring anpassen
-			$stopwords = array();
-			$stopwordfile = $_SERVER['DOCUMENT_ROOT']."/".INSTALLPATH."/lib/stoppwords_en.txt";
-
-			$handle = fopen ($stopwordfile, "r");
-			while (!feof($handle)) {
-				$buffer = fgets($handle, 512);
-				array_push($stopwords, ltrim(rtrim(strtolower($buffer))));
-			}
-			fclose ($handle);
-
-			$stopwordfile = $_SERVER['DOCUMENT_ROOT']."/".INSTALLPATH."/lib/stoppwords_de.txt";
-
-			$handle = fopen ($stopwordfile, "r");
-			while (!feof($handle)) {
-				$buffer = fgets($handle, 512);
-				array_push($stopwords, ltrim(rtrim(strtolower($buffer))));
-			}
-			fclose ($handle);
-
-			$q = preg_replace("/\"/iu", "", $q);
-			$condition = preg_replace("/@@q@@/", $q, $where);
-			$stmt_thumbs = "SELECT SQL_CALC_FOUND_ROWS id, filename, headline, keywords, object_name, transref, photographer, picsize, city, date FROM picture_data WHERE (".$condition.")".$dateselect." ORDER BY id ASC LIMIT 0,".$maxfiles."";		
-
-			$query_thumbs = mysqli_query($link, $stmt_thumbs);
 	
 		}
 
@@ -135,14 +141,12 @@
 			$view = "gallery";
 		}
 
-		$stmt_count_thumbs = "Select FOUND_ROWS()";
-		$query_count_thumbs = mysqli_query($link, $stmt_count_thumbs);
-		$num_files = mysqli_num_rows($query_count_thumbs);
+		$num_files = mysqli_num_rows($query_thumbs);
 
 		//Wenn keine Ergebnisse vorhanden sind, auf die Fehlerseite weiterleiten
 		if($num_files == 0){
-			header("Location: ".INSTALLPATH."/404.html?q=".$_GET['q']);
-			logfile($_GET['q'],"suchergebnis_null");
+			header("Location: /".INSTALLPATH."/nosearch.html?q=$q");
+			logfile($q,"suchergebnis_null");
 			exit;
 		}
 
