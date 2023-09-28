@@ -9,7 +9,6 @@
 
 		if(isset($_GET['id'])){
 				$id = intval(@$_GET['id']);
-				$id = mysql_real_escape_string($_GET['id']);
 		} else {
 			echo $_SESSION['lightboxids'];
 		}
@@ -19,18 +18,19 @@
 	        //Ueberpruefen, ob schon IDs in der Session vorhanden sind...
 
 	        if(isset($_SESSION['lightboxids'])) {
-	        	if(!ereg($id,$_SESSION['lightboxids'])){
+
+	        	if(!preg_match("/".$id."/",$_SESSION['lightboxids'])){
 		        	$_SESSION['lightboxids'] = $_SESSION['lightboxids'].$id."|";
 		        }
 	        } else {
 	        	$_SESSION['lightboxids'] = $id."|";
 	        }
-	     }
+	    }
 
 	     if($_GET['action'] == "delete") {
 
 	        if(isset($_SESSION['lightboxids'])) {
-	        	if(ereg($id,$_SESSION['lightboxids'])){
+	        	if(preg_match("/".$id."/",$_SESSION['lightboxids'])){
 	        		$_SESSION['lightboxids'] = str_replace($id."|", "", $_SESSION['lightboxids']);
 		        }
 	        } else {
@@ -42,7 +42,7 @@
 	     header("Location:".$_SERVER['HTTP_REFERER']);
 
 	} else {
-		header("Location:/".INSTALLPATH."/index.php?err=12");
+		header("Location:".INSTALLPATH."/index.html?err=12");
 		exit;
 	}
 

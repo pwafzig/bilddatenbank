@@ -27,17 +27,17 @@
 	<tbody>
 
 	<?php
-		$html="";
-		$ids = split("\|",$_SESSION['lightboxids']);
-		$anz_ids = sizeof($ids)-1;
+		$html = "";
 		$or = "";
+		$ids = explode("|",$_SESSION['lightboxids']);
+		$anz_ids = sizeof($ids)-1;
 		for($i=0;$i<$anz_ids;$i++){
 			$or .= "id = '".$ids[$i]."' OR ";
 		}
 		$stmt = "SELECT * FROM picture_data WHERE ".$or." id = '99999999'";
-		$query = mysql_query($stmt);
-		while($out = mysql_fetch_array($query)){
-			$html .= "<tr><td align=\"center\">".$out['id']."</td><td align=\"center\"><a href=\"#\" onclick=\"detail('/".INSTALLPATH."/detail.php?id=".$out['id']."');return false;\"><img src=\"/".INSTALLPATH."/thumbs/".$out['filename']."\" width=\"33\" height=\"22\" alt=\"\" title=\"\" border\"0\"></a></td><td>".utf8_encode($out['headline'])."</td><td align=\"center\"><a href=\"/".INSTALLPATH."/download.php?id=".$out['id']."\" alt=\"\" title=\"".$TEXT['lightbox-herunterladen']."\">".$out['filename']."</a></td><td align=\"center\"><a href=\"/".INSTALLPATH."/addto.php?action=delete&id=".$out['id']."\" id=\"delete\">&nbsp;</a></td><td align=\"center\"><input type=\"checkbox\" name=\"zip[]\" value=\"".$out['filename']."\"></td></tr>\n";
+		$query = mysqli_query($link, $stmt);
+		while($out = mysqli_fetch_array($query, MYSQLI_ASSOC)){
+			$html .= "<tr><td align=\"center\">".$out['id']."</td><td align=\"center\"><a href=\"#\" onclick=\"detail('/".INSTALLPATH."/detail.php?id=".$out['id']."');return false;\"><img src=\"/".INSTALLPATH."/thumbs/".$out['filename']."\" width=\"33\" height=\"22\" alt=\"\" title=\"\" border\"0\"></a></td><td>".$out['headline']."</td><td align=\"center\"><a href=\"/".INSTALLPATH."/download.php?id=".$out['id']."\" alt=\"\" title=\"".$TEXT['lightbox-herunterladen']."\">".$out['filename']."</a></td><td align=\"center\"><a href=\"/".INSTALLPATH."/addto.php?action=delete&id=".$out['id']."\" id=\"delete\" style=\"text-decoration:none;text-align:center;\">&nbsp;</a></td><td align=\"center\"><input type=\"checkbox\" name=\"zip[]\" value=\"".$out['filename']."\"></td></tr>\n";
 		}
 		echo $html;
 	?>
