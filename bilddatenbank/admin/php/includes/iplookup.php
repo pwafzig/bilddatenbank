@@ -1,1 +1,0 @@
-<iframe width="425" height="350" frameborder="0" scrolling="no" marginheight="0" marginwidth="0" src="http://www.google.de/maps?f=q&amp;source=s_q&amp;hl=de&amp;geocode=&amp;q=<?php echo $_GET[lat] ?>,<?php echo $_GET[long] ?>&amp;ie=UTF8&amp;z=8&amp;output=embed"></iframe>
