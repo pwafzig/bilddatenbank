@@ -17,7 +17,7 @@
 		$html .= "<tr><td align=\"center\">".$out['dateshow']."</td>";	
 		$html .= "<td align=\"center\">".$out['user']."</td>";
 		$html .= "<td align=\"center\">".$out['filename']."</td>";
-		$html .= "<td align=\"center\"><a href=\"/".INSTALLPATH."/admin/bin/showimgdetails.php?id=".$out['id']."&width=500\" class=\"jTip\" id=\"".$out['id']."\" name=\"Vorschau:\"><img src=\"/".INSTALLPATH."/thumbs/".$out['filename']."\" border=\"0\" width=\"33\" height=\"22\"/></a></td>";
+		$html .= "<td align=\"center\"><a href=\"/".INSTALLPATH."/detail.php?id=".$out['id']."\" onclick=\"detail('/".INSTALLPATH."/detail.php?id=".$out['id']."');return false;\"><img src=\"/".INSTALLPATH."/thumbs/".$out['filename']."\" border=\"0\" width=\"33\" height=\"22\"/></a></td>";
 		$html .= "<td align=\"center\">$out[ip]</td></tr>";
 	}
 
@@ -38,7 +38,7 @@
 
 		$html .= "<tr><td align=\"center\">".$out['hits']."</td>";	
 		$html .= "<td align=\"center\">".$out['filename']."</td>";
-		$html .= "<td align=\"center\"><a href=\"/".INSTALLPATH."/admin/bin/showimgdetails.php?id=".$out['id']."&width=170\" class=\"jTip\" id=\"".$out['id']."_1\" name=\"Vorschau:\"><img src=\"/".INSTALLPATH."/thumbs/".$out['filename']."\" border=\"0\" width=\"33\" height=\"22\"/></a></td></tr>";
+		$html .= "<td align=\"center\"><a href=\"/".INSTALLPATH."/detail.php?id=".$out['id']."\" onclick=\"detail('/".INSTALLPATH."/detail.php?id=".$out['id']."');return false;\"><img src=\"/".INSTALLPATH."/thumbs/".$out['filename']."\" border=\"0\" width=\"33\" height=\"22\"/></a></td></tr>";
 	}
 
 	$html .= "</tbody></table>\n";
