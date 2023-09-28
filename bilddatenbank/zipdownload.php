@@ -10,26 +10,26 @@
 
 		$zip = new ZipArchive();
 
-		if ($zip->open($_SERVER['DOCUMENT_ROOT'].$filename, ZipArchive::CREATE)!==TRUE) {
+		if ($zip->open($_SERVER['DOCUMENT_ROOT']."/".$filename, ZipArchive::CREATE)!==TRUE) {
 		    exit("cannot open <$filename>\n");
 		} else {
 	    	foreach ($_POST['zip'] as &$value) {
 
-	    		if(!file_exists($_SERVER['DOCUMENT_ROOT']."/".INSTALLPATH."/".$data."/".$value, $value)){
+	    		if(!file_exists($_SERVER['DOCUMENT_ROOT']."/".INSTALLPATH."/data/".$value)){
 	    			echo "File $value doesn't exist<br />";
-	    		} elseif (!is_readable($_SERVER['DOCUMENT_ROOT']."/".INSTALLPATH."/".$data."/".$value, $value)) {
+	    		} elseif (!is_readable($_SERVER['DOCUMENT_ROOT']."/".INSTALLPATH."/data/".$value)) {
 	    			echo "File $value isn't readable<br />";
 	    		} else {
 	    			//echo "File $value exists and is readable<br />";
 	    		}
 
-				$zip->addFile($_SERVER['DOCUMENT_ROOT']."/".INSTALLPATH."/".$data."/".$value, $value);
+				$zip->addFile($_SERVER['DOCUMENT_ROOT']."/".INSTALLPATH."/data/".$value, $value);
 			}	
 
 			$zip->close();
 		}
 
-		$filesize = filesize($_SERVER['DOCUMENT_ROOT'].$filename);
+		$filesize = filesize($_SERVER['DOCUMENT_ROOT']."/".$filename);
 
 		//Logging des Downloads
 
@@ -38,12 +38,12 @@
 			if($_SESSION['login'] != "probezugang"){
 				$stmt_log = "UPDATE users SET downloads = downloads+1 WHERE login = '".$_SESSION['login']."' LIMIT 1";
 				mysqli_query($link, $stmt_log);
-				$stmt_count = "INSERT INTO downloads VALUES ('', '".$_SESSION['login']."', '".$value."', CURRENT_TIMESTAMP, '".$_SERVER['REMOTE_ADDR']."')";
+				$stmt_count = "INSERT INTO downloads VALUES (NULL, '".$_SESSION['login']."', '".$value."', CURRENT_TIMESTAMP, '".$_SERVER['REMOTE_ADDR']."')";
 				mysqli_query($link, $stmt_count);
 			} else {
 				$stmt_log = "UPDATE accessids SET downloads = downloads+1 WHERE hash = '".$_SESSION['accessid']."' LIMIT 1";
 				mysqli_query($link, $stmt_log);
-				$stmt_count = "INSERT INTO downloads VALUES ('', '".$_SESSION['name']."', '".$value."', CURRENT_TIMESTAMP, '".$_SERVER['REMOTE_ADDR']."')";
+				$stmt_count = "INSERT INTO downloads VALUES (NULL, '".$_SESSION['name']."', '".$value."', CURRENT_TIMESTAMP, '".$_SERVER['REMOTE_ADDR']."')";
 				mysqli_query($link, $stmt_log);
 			}
 		}
@@ -71,21 +71,21 @@
 
 		//Ausgabe der Datei an den Browser
 		
-		@apache_setenv('no-gzip', 1);
-		@ini_set('zlib.output_compression', 0);
-		set_time_limit(300);
-		
-		header("Content-type: application/force-download");
-		header('Content-Type: application/octet-stream');
-		header("Content-Length: ".$filesize."");
-		header("Content-type: application/zip;\n");
+
+		header("Pragma: public");
+		header("Expires: 0");
+		header("Cache-Control: must-revalidate, post-check=0, pre-check=0");
+		header("Cache-Control: public");
+		header("Content-Description: File Transfer");
+		header("Content-type: application/octet-stream");
 		header("Content-Disposition: attachment; filename=".date('Ymd-His')."_".$_SESSION['login'].".zip");
-		header("Content-Transfer-Encoding: binary");
-		header("Cache-Control: post-check=0, pre-check=0");
+		header("Content-Length: ".$filesize."");
+		header("Pragma: no-cache"); 
+		header("Expires: 0"); 
 
 		$chunksize = 1 * (1024 * 1024); // how many bytes per chunk
 		if ($filesize > $chunksize) {
-		  $handle = fopen($_SERVER['DOCUMENT_ROOT'].$filename, 'rb');
+		  $handle = fopen($_SERVER['DOCUMENT_ROOT']."/".$filename, 'rb');
 		  $buffer = '';
 		  while (!feof($handle)) {
 		    $buffer = fread($handle, $chunksize);
@@ -95,7 +95,7 @@
 		  }
 		  fclose($handle);
 		} else {
-		  readfile($_SERVER['DOCUMENT_ROOT'].$filename);
+		  readfile($_SERVER['DOCUMENT_ROOT']."/".$filename);
 		}
 		exit;
 	
