@@ -5,8 +5,15 @@
 	if(isset($_SESSION['login'])) {
 
 		//Filename für die ZIP-Datei festlegen
-		//$filename = INSTALLPATH."/temp/".date('Ymd-His')."_".$_SESSION['login'].".zip";
 		$filename = INSTALLPATH."/temp/".date('Ymd-His')."_".$_SESSION['login'].".zip";
+
+		//Auflösung für die ZIP-Datei festlegen
+		if($_SESSION['resolution'] == "lowres") { 
+			$res_path = "lowres"; 
+		} else {
+			$res_path = "data";
+		}
+
 
 		$zip = new ZipArchive();
 
@@ -15,15 +22,15 @@
 		} else {
 	    	foreach ($_POST['zip'] as &$value) {
 
-	    		if(!file_exists($_SERVER['DOCUMENT_ROOT']."/".INSTALLPATH."/data/".$value)){
+	    		if(!file_exists($_SERVER['DOCUMENT_ROOT']."/".INSTALLPATH."/".$res_path."/".$value)){
 	    			echo "File $value doesn't exist<br />";
-	    		} elseif (!is_readable($_SERVER['DOCUMENT_ROOT']."/".INSTALLPATH."/data/".$value)) {
+	    		} elseif (!is_readable($_SERVER['DOCUMENT_ROOT']."/".INSTALLPATH."/".$res_path."/".$value)) {
 	    			echo "File $value isn't readable<br />";
 	    		} else {
 	    			//echo "File $value exists and is readable<br />";
 	    		}
 
-				$zip->addFile($_SERVER['DOCUMENT_ROOT']."/".INSTALLPATH."/data/".$value, $value);
+				$zip->addFile($_SERVER['DOCUMENT_ROOT']."/".INSTALLPATH."/".$res_path."/".$value, $value);
 			}	
 
 			$zip->close();

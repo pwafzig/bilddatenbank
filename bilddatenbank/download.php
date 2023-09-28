@@ -19,14 +19,10 @@
 		}
 		
 		//Abfrage ob HighRes- oder LowRes-User
-		if(isset($_SESSION['resolution'])){
-			if($_SESSION['resolution'] == "highres"){
-				$data = "data";
-			} else {
-				$data = "lowres";
-			} 
+		if($_SESSION['resolution'] == "lowres") { 
+			$res_path = "lowres"; 
 		} else {
-			exit;
+			$res_path = "data";
 		}
 
 		//Datenbankabfrage
@@ -54,14 +50,14 @@
             }
 
 			//Ausgabe der Datei an den Browser
-			$filesize = filesize(DOCROOT.INSTALLPATH."/".$data."/".$filename);
+			$filesize = filesize(DOCROOT.INSTALLPATH."/".$res_path."/".$filename);
 
 			header("Content-Type: image/jpeg");
 			header("Content-Disposition: attachment; filename=".$result_popup['filename']);
 			header("Content-Transfer-Encoding: binary");
 			header("Cache-Control: post-check=0, pre-check=0");
 			header("Content-Length: ".$filesize."");
-			readfile(DOCROOT.INSTALLPATH."/".$data."/".$filename);
+			readfile(DOCROOT.INSTALLPATH."/".$res_path."/".$filename);
 
 			//Infomail senden
 			$file	 = "http://".$_SERVER['HTTP_HOST']."/".INSTALLPATH."/thumbs/".$filename;
