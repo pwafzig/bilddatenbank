@@ -1,16 +1,16 @@
 <?php
-    if(!isset($_SESSION[adminlogin])){
+    if(!isset($_SESSION['adminlogin'])){
    	   	exit;
    	}
 	
 	$stmt = "SELECT DATE_FORMAT(downloads.timestamp, '%Y-%m-%d') AS datestr, downloads.ip AS ip, DATE_FORMAT(downloads.timestamp, '%d.%m.%Y, %H:%i') AS dateshow, downloads.user, downloads.filename AS filename, picture_data.id AS id FROM downloads, picture_data WHERE picture_data.filename = downloads.filename ORDER BY downloads.timestamp DESC LIMIT 0,50";
 	
-	$query = mysql_query($stmt);
+	$query = mysqli_query($link, $stmt);
 
 	$html  = "<h3>Aktuelle Downloads (Top 50)</h3><br /><table id=\"admintable\" border=\"1\" width=\"100%\">\n";
 	$html .= "<thead><tr><th>Datum</th><th>Benutzer</th><th>Dateiname</th><th>Vorschau</th><th>IP-Adresse</th></tr></thead><tbody>\n";
 
-	while($out = mysql_fetch_array($query)){
+	while($out = mysqli_fetch_array($query, MYSQLI_ASSOC)){
 		
 		$filename = substr($out['filename'], 0, 8)."/".$out['filename'];
 
@@ -27,12 +27,12 @@
 	
 	$stmt = "SELECT COUNT(downloads.filename) AS hits, downloads.filename AS filename, picture_data.id AS id FROM downloads, picture_data WHERE (picture_data.filename = downloads.filename) GROUP BY filename ORDER BY hits DESC LIMIT 0,10";
 
-	$query = mysql_query($stmt);
+	$query = mysqli_query($link, $stmt);
 
 	$html  = "<br /><br /><h3>Top 10 der beliebtesten Dateien</h3><br /><table id=\"admintable\" border=\"1\" width=\"100%\">\n";
 	$html .= "<thead><tr><th>Downloads</th><th>Datei</th><th>Vorschau</th></tr></thead><tbody>\n";
 
-	while($out = mysql_fetch_array($query)){
+	while($out = mysqli_fetch_array($query, MYSQLI_ASSOC)){
 		
 		$filename = substr($out['filename'], 0, 8)."/".$out['filename'];
 
