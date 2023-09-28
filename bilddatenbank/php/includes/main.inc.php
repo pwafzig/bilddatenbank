@@ -230,9 +230,9 @@
 			$thumbs .= "<div>\n";
 
 			while ($out = mysqli_fetch_array($query_thumbs, MYSQLI_ASSOC)){
-				$stmt_details = "SELECT COUNT(id) FROM picture_data where (transref = '".$out['transref']."')";
+				$stmt_details = "SELECT COUNT(id) as num FROM picture_data where (transref = '".$out['transref']."')";
 				$query_details = mysqli_query($link, $stmt_details);
-				$num_files_details = mysqli_fetch_array($query_details, MYSQLI_ASSOC);
+				$num_files_details = mysqli_fetch_row($query_details);
 				
 				if(strlen($out['object_name']) > 50){
 					$object_name = substr($out['object_name'], 0, 50)."...";
@@ -245,7 +245,7 @@
 				$thumbs .= "<img src=\"/".INSTALLPATH."/thumbs/".$out['filename']."\" border=\"0\" alt=\"".$out['headline']." (&copy; ".$out['photographer'].")\" /></a></div>\n";
 				$thumbs .= "<div class=\"thumbfunc\"><a href=\"/".INSTALLPATH."/".$out['transref']."\" title=\"".$out['object_name']."\"><h3>".$object_name."</h3></a>";
 				$thumbs .= substr($out['date'],6,2).".".substr($out['date'],4,2).".".substr($out['date'],0,4).", ";
-				$thumbs .= $num_files_details[0]." Bilder";
+				$thumbs .= $num_files_details['0']." Bilder";
 
 				$thumbs .= "</div></div>\n";
 			}
