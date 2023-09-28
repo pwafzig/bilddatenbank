@@ -91,6 +91,14 @@
 		}
 	}
 
+    function secure_input($param) 
+    {
+        global $link;
+        
+        $param = strip_tags(mysqli_real_escape_string($link, trim($param)));
+        return $param; 
+    }
+
 
     /**************** Admin-Login absichern ***************/
 
