@@ -16,11 +16,11 @@
 
 		if(isset($_POST['sent']) && $_POST['sent'] == "yes"){
 
-			$stmt = "UPDATE collections SET name = '".$_POST['name']."', comment = '".utf8_decode($_POST['comment'])."', ids = '".$_POST['ids']."' WHERE id = ".$_POST['id']." LIMIT 1";
+			$stmt = "UPDATE collections SET name = '".$_POST['name']."', comment = '".$_POST['comment']."', ids = '".$_POST['ids']."' WHERE id = ".$_POST['id']." LIMIT 1";
 
-			$query = mysql_query($stmt);
+			$query = mysqli_query($link, $stmt);
 			if (!$query) {
-    			die('Datenbankfehler: ' . mysql_error());
+    			die('Datenbankfehler: ' . mysqli_error($link));
 			} else {
 				echo "Die Daten wurden korrekt in der Datenbank ge&auml;ndert. <button onclick=\"self.parent.tb_remove(); parent.window.location.href='/".INSTALLPATH."/admin/index.php?sect=collections';\" class=\"submit\">Schlie&szlig;en</button>";
 			}
@@ -28,8 +28,8 @@
 
 		//Kollektionen aus DB lesen
 		$stmt = "SELECT * FROM collections WHERE id='".$_GET['id']."'";
-		$query = mysql_query($stmt);
-		$out = mysql_fetch_row($query);
+		$query = mysqli_query($link, $stmt);
+		$out = mysqli_fetch_row($query);
 
 		//Formular anzeigen	?>
 
@@ -67,7 +67,7 @@
 		if(isset($_POST['sent']) && $_POST['sent'] == "yes"){
 
 			$stmt = "INSERT INTO collections (id, name, comment, ids) VALUES (NULL, '".$_POST['name']."', '".$_POST['comment']."', '".$_POST['ids']."');";
-			$query = mysql_query($stmt);
+			$query = mysqli_query($link, $stmt);
 			if (!$query) {
     			die('Datenbankfehler: ' . mysql_error());
 			} else {
@@ -110,8 +110,8 @@
 
 			//Daten aus DB lesen
 			$stmt = "SELECT * FROM collections WHERE id='".$_GET['id']."'";
-			$query = mysql_query($stmt);
-			$out = mysql_fetch_row($query);
+			$query = mysqli_query($link, $stmt);
+			$out = mysqli_fetch_row($query);
 
 			$confirm = md5($out[0]);
 
@@ -124,14 +124,14 @@
 
 			//Daten aus DB lesen
 			$stmt = "SELECT * FROM collections WHERE id='".$_GET['id']."'";
-			$query = mysql_query($stmt);
-			$out = mysql_fetch_row($query);
+			$query = mysqli_query($link, $stmt);
+			$out = mysqli_fetch_row($query);
 
 			$check = md5($out[0]);
 
 			if($check == $_GET['confirm']){
 				$stmt = "DELETE FROM collections WHERE id = ".$out[0]." LIMIT 1";
-				$query = mysql_query($stmt);
+				$query = mysqli_query($link, $stmt);
 				if (!$query) {
     				die('Datenbankfehler: ' . mysql_error());
 				} else {

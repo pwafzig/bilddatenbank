@@ -116,9 +116,7 @@
 			//Collection-Suche
  	    elseif(isset($_GET['collection'])){
 			$q = mysqli_real_escape_string($link, $_GET['collection']);
-			$q = preg_replace("/\/bilddatenbank\//", "", $q);
-			$q = preg_replace("/_/", " ", $q);
-			$query_collection = mysqli_query($link, "SELECT * FROM collections WHERE name = '".$q."'");
+			$query_collection = mysqli_query($link, "SELECT * FROM collections WHERE id = '".$q."'");
 			$out_collection = mysqli_fetch_array($query_collection);
 
 			$stmt_thumbs = "SELECT SQL_CALC_FOUND_ROWS id, filename, headline, keywords, object_name, transref, photographer, city, date, picsize FROM picture_data WHERE id IN (".$out_collection['ids'].") ORDER BY object_name ASC LIMIT 0,".$maxfiles."";
