@@ -23,15 +23,26 @@
 
 		//Rewrite-Suche
  	    if(isset($_GET['rewrite'])){
-			$q = mysqli_real_escape_string($link, $_GET['q']);
-			$q = preg_replace("/\/bilddatenbank\//", "", $q);
+			$path = mysqli_real_escape_string($link, $_GET['path']);
+			$path = preg_replace("/\/bilddatenbank\//", "", $path);
 
-			$stmt_thumbs = "SELECT SQL_CALC_FOUND_ROWS id, filename, headline, keywords, object_name, caption, transref, photographer, date, city, picsize FROM picture_data WHERE transref = '$q' ORDER BY id ASC LIMIT 0,".$maxfiles."";
+			$stmt_thumbs = "SELECT SQL_CALC_FOUND_ROWS id, filename, headline, keywords, object_name, caption, transref, photographer, date, city, picsize FROM picture_data WHERE transref = '$path' ORDER BY id ASC LIMIT 0,".$maxfiles."";
 			$query_thumbs = mysqli_query($link, $stmt_thumbs);
+
+			//Überschrift erzeugen
+			$query_title = "SELECT object_name FROM picture_data WHERE transref = '$path'";
+			$result_title = mysqli_query($link, $query_title);
+			$out_title = mysqli_fetch_array($result_title, MYSQLI_ASSOC);
+			$title_gallery = $out_title['object_name'];
+
  	    }
 
  	    //Volltext-Suche 	    
 		elseif(isset($_GET['q'])){
+
+			$q = secure_input($_GET['q']);
+
+			$title_gallery = "Suche nach: ".$q;
 
 			//Ergaenzung durch eine Jahreszahl…
  	    	if(isset($_GET['year'])){
@@ -40,10 +51,6 @@
 			} else {
 				$dateselect = " ";
 			}
-
-			$q = strtolower($_GET['q']);
-			$q = preg_replace("/\//", "", $q);
-			$q = preg_replace("/".INSTALLPATH."/", "", $q);
 
 			$where = "(headline LIKE '%@@q@@%') OR (caption LIKE '%@@q@@%') OR (photographer LIKE '%@@q@@%') OR (location LIKE '%@@q@@%') OR (city LIKE '%@@q@@%') OR (keywords LIKE '%@@q@@%')";
 
@@ -143,12 +150,6 @@
 		$thumbs = "";
 
 		if($view == "single"){
-			
-			//Überschrift erzeugen
-			$query_title = "SELECT object_name FROM picture_data WHERE transref = '$q' ORDER BY id ASC LIMIT 1";
-			$result_title = mysqli_query($link, $query_title);
-			$out_title = mysqli_fetch_array($result_title, MYSQLI_ASSOC);
-			$title_gallery = $out_title['object_name'];
 			
 			$thumbs .= "<h1>".$title_gallery."</h1>";
 		
