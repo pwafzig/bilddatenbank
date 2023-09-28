@@ -90,26 +90,27 @@
 
 		//Datumssuche
  	    elseif(isset($_GET['date'])){
+
 	  		$date = explode("-", mysqli_real_escape_string($link, $_GET['date']));
-	  		$startdate = $date[0];
-	  		$enddate   = $date[1];
+
+	  		if (isset($date[0])) $startdate = $date[0];
+	  		if (isset($date[1])) $enddate   = $date[1];
 
 	  		if(isset($enddate)){
-	  			$datestring = "date >= ".$enddate." AND date <= ".$startdate."";
+	  			$datestring = "date >= ".$enddate." OR date <= ".$startdate."";
 	  		} else {
 	  			$datestring = "date = ".$startdate."";
 	  		}
 
 	  		$stmt_thumbs = "SELECT SQL_CALC_FOUND_ROWS id, filename, headline, keywords, object_name, transref, photographer, city, date, picsize FROM picture_data WHERE (".$datestring.") ORDER BY id ASC LIMIT 0,".$maxfiles."";
-	  		$query_thumbs = mysql_query($stmt_thumbs);
-
+	  		$query_thumbs = mysqli_query($link, $stmt_thumbs);
  	    }
 
 			//Keyword-Suche
  	    elseif(isset($_GET['key'])){
 			$q = mysqli_real_escape_string($link, $_GET['key']);
     		$stmt_thumbs = "SELECT SQL_CALC_FOUND_ROWS id, filename, headline, keywords, object_name, transref, photographer, city, date, picsize FROM picture_data WHERE keywords LIKE '%".$q."%' ORDER BY id ASC LIMIT 0,".$maxfiles."";
-			$query_thumbs = mysql_query($stmt_thumbs);
+			$query_thumbs = mysqli_query($link, $stmt_thumbs);
  	    }
 
 			//Collection-Suche
@@ -146,7 +147,7 @@
 
 		if($view == "single"){
 			
-			$thumbs .= "<h1>".$title_gallery."</h1>";
+			if(isset($title_gallery)) $thumbs .= "<h1>".$title_gallery."</h1>";
 		
 			//Bei eingeloggten Usern innerhalb der Galerien und Collections den Button fuer den ZIP-Download anzeigen
 			if(isset($_GET['rewrite'])){
