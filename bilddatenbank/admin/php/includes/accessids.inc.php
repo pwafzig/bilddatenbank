@@ -1,19 +1,21 @@
 <?php
-    if(!isset($_SESSION[adminlogin])){
+    if(!isset($_SESSION['adminlogin'])){
    	   	exit;
    	}
     
 	//Tabelle mit existierenden Access-IDs ausgeben
 
 	$stmt = "SELECT * FROM accessids ORDER BY id";
-	$query = mysql_query($stmt);
+	$query = mysqli_query($link, $stmt);
+
+	if(!isset($out['id'])) $out['id'] = "1";
 	
 	$html  = "<a href=\"/".INSTALLPATH."/admin/bin/editaccessids.php?id=".$out['id']."&action=add&KeepThis=true&TB_iframe=true&height=540&width=810\" class=\"thickbox\" id=\"add\"></a><a href=\"/".INSTALLPATH."/admin/bin/editaccessids.php?id=".$out['id']."&action=add&KeepThis=true&TB_iframe=true&height=540&width=810\" class=\"thickbox\">Neue Access-ID anlegen</a><br /><br />";
 
 	$html .= "<table id=\"admintable\" border=\"1\" width=\"100%\">\n";
 	$html .= "<thead><tr><th class=\"header\" width=\"40\">Nr.</th><th class=\"header\">Name</th><th>Bemerkung</th><th>Auflösung</th><th>Ablauf</th><th class=\"header\" width=\"100\">Downloads</th><th class=\"header\">Zuletzt eingeloggt</th><th class=\"header\">Angelegt</th><th>Test</th><th></th></tr></thead><tbody>\n";
 
-	while($out = mysql_fetch_array($query)){
+	while($out = mysqli_fetch_array($query, MYSQLI_ASSOC)){
 	
 		$year = substr($out['date'], 0, 4);
 		$mon  = substr($out['date'], 4, 2);

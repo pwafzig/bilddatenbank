@@ -19,11 +19,11 @@
 			//Datum umformatieren
 			$date = $_POST['jahr'].$_POST['monat'].$_POST['tag'];
 
-			$stmt = "UPDATE accessids SET date = '".$date."', bemerkung = '".utf8_decode($_POST['bemerkung'])."', name = '".utf8_decode($_POST['name'])."', resolution = '".utf8_decode($_POST['resolution'])."' WHERE id = ".$_POST['id']." LIMIT 1";
+			$stmt = "UPDATE accessids SET date = '".$date."', bemerkung = '".$_POST['bemerkung']."', name = '".$_POST['name']."', resolution = '".$_POST['resolution']."' WHERE id = ".$_POST['id']." LIMIT 1";
 
-			$query = mysql_query($stmt);
+			$query = mysqli_query($link, $stmt);
 			if (!$query) {
-    			die('Datenbankfehler: ' . mysql_error());
+    			die('Datenbankfehler: ' . mysqli_error($link));
 			} else {
 				echo "Die Daten wurden korrekt in der Datenbank ge&auml;ndert. <button onclick=\"self.parent.tb_remove(); parent.window.location.href='/".INSTALLPATH."/admin/index.php?sect=accessids';\" class=\"submit\">Schlie&szlig;en</button>";
 			}
@@ -31,8 +31,8 @@
 
 		//Access-IDs aus DB lesen
 		$stmt = "SELECT * FROM accessids WHERE id='".$_GET['id']."'";
-		$query = mysql_query($stmt);
-		$out = mysql_fetch_row($query);
+		$query = mysqli_query($link, $stmt);
+		$out = mysqli_fetch_row($query);
 
 		//Formular anzeigen	?>
 
@@ -143,9 +143,9 @@
 			$date = $_POST['jahr'].$_POST['monat'].$_POST['tag'];
 
 			$stmt = "INSERT INTO accessids (id, hash, date, bemerkung, name, resolution, downloads, timestamp, lastlogin) VALUES (NULL, MD5('".$hash."'), '".$date."', '".utf8_decode($_POST['bemerkung'])."', '".utf8_decode($_POST['name'])."', '".$_POST['resolution']."', '0', CURRENT_TIMESTAMP, '0000-00-00 00:00:00');";
-			$query = mysql_query($stmt);
+			$query = mysqli_query($link, $stmt);
 			if (!$query) {
-    			die('Datenbankfehler: ' . mysql_error());
+    			die('Datenbankfehler: ' . mysqli_error($link));
 			} else {
 				echo "Die Access-ID wurde korrekt in die Datenbank eingef&uuml;gt. <button onclick=\"self.parent.tb_remove(); parent.window.location.href='/".INSTALLPATH."/admin/index.php?sect=accessids';\" class=\"submit\">Schlie&szlig;en</button>";
 			}
@@ -213,11 +213,11 @@
 				<legend>Benutzer bearbeiten</legend>
 					<dl>
 		        		<dt><label for="name">Name:</label></dt>
-        		    	<dd><input type="text" name="name" id="name" size="32" maxlength="128" value="<?php echo htmlentities($out[4])?>" /></dd>
+        		    	<dd><input type="text" name="name" id="name" size="32" maxlength="128" value="" /></dd>
         			</dl>
 					<dl>
         				<dt><label for="bemerkung">Bemerkung:</label></dt>
-            			<dd><textarea name="bemerkung" rows="5" cols="45" id="bemerkung"><?php echo htmlentities($out[3]);?></textarea></dd>
+            			<dd><textarea name="bemerkung" rows="5" cols="45" id="bemerkung"></textarea></dd>
         			</dl>
 					<dl>
         				<dt><label for="date">Ablauf:</label></dt>
@@ -247,8 +247,8 @@
 
 			//Daten aus DB lesen
 			$stmt = "SELECT * FROM accessids WHERE id='".$_GET['id']."'";
-			$query = mysql_query($stmt);
-			$out = mysql_fetch_row($query);
+			$query = mysqli_query($link, $stmt);
+			$out = mysqli_fetch_row($query);
 
 			$confirm = md5($out[4]);
 
@@ -261,14 +261,14 @@
 
 			//Daten aus DB lesen
 			$stmt = "SELECT * FROM accessids WHERE id='".$_GET['id']."'";
-			$query = mysql_query($stmt);
-			$out = mysql_fetch_row($query);
+			$query = mysqli_query($link, $stmt);
+			$out = mysqli_fetch_row($query);
 
 			$check = md5($out[4]);
 
 			if($check == $_GET['confirm']){
 				$stmt = "DELETE FROM accessids WHERE id = ".$out[0]." LIMIT 1";
-				$query = mysql_query($stmt);
+				$query = mysqli_query($link, $stmt);
 				if (!$query) {
     				die('Datenbankfehler: ' . mysql_error());
 				} else {

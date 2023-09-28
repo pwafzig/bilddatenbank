@@ -116,12 +116,7 @@
     //Wenn ein gueltiger Hash an die URL angehaengt ist, wird eine Session mit Daten aus der Datenbank gestartet
     if(isset($_GET['accessid'])){
 
-        if(get_magic_quotes_gpc()) {
-            $accessid = stripslashes($_GET['accessid']);
-        } else {
-            $accessid = $_GET['accessid'];
-        }
-
+        $accessid = $_GET['accessid'];
         $accessid = mysqli_real_escape_string($link, $accessid);
 
         $stmt_access = "SELECT * FROM accessids WHERE hash = '".$accessid."'";
@@ -138,10 +133,9 @@
         $stmt_log = "UPDATE accessids SET lastlogin = NOW( ) WHERE hash = '".$accessid."' LIMIT 1";
         mysqli_query($link, $stmt_log);
 
-        $_SESSION['login']          =   "Access-ID";
+        $_SESSION['login']          =   "Bilddatenbank";
         $_SESSION['name']           =   $result_access['name'];
         $_SESSION['accessid']       =   $accessid;
-        $_SESSION['lang'] 			=   $result_access['lang'];
         $_SESSION['resolution']		=   $result_access['resolution'];
     }
 
