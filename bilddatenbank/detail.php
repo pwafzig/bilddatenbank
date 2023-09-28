@@ -27,7 +27,7 @@
 	$keywords_html = "";
 
 	for($i=0;$i<count($keywords);$i++) {
-	    $keywords_html .= "<a href=\"/".INSTALLPATH."/tags/".$keywords[$i]."\" onclick=\"javascript:window.opener.parent.location.href = '/".INSTALLPATH."/tags/".$keywords[$i]."';self.close()\" class=\"textlink\">".$keywords[$i]."</a>, ";
+	    $keywords_html .= "<a href=\"/".INSTALLPATH."/?key=".$keywords[$i]."\" onclick=\"javascript:window.opener.parent.location.href = '/".INSTALLPATH."/?key=".$keywords[$i]."';self.close()\" class=\"textlink\">".$keywords[$i]."</a>, ";
 	}
 
 	//Dateigroesse ausrechnen
