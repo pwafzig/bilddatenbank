@@ -54,7 +54,7 @@ function NixMarkieren(){
     //Abfrage, ob hier gerade eine Suche läuft
     if(!isset($_POST['q'])){
 
-            $stmt_thumbs = "SELECT SQL_CALC_FOUND_ROWS id, filename, headline, photographer, picsize, timestamp FROM picture_data ORDER BY filename DESC LIMIT ".$start.",".$anzthumbs."";
+            $stmt_thumbs = "SELECT SQL_CALC_FOUND_ROWS id, filename, headline, photographer, picsize, timestamp FROM picture_data ORDER BY id DESC LIMIT ".$start.",".$anzthumbs."";
             $query_thumbs = mysqli_query($link, $stmt_thumbs);
 
             $stmt_count_thumbs = "Select FOUND_ROWS()";
@@ -63,7 +63,7 @@ function NixMarkieren(){
 
     //Wenn ja, dann Suchstatement zusammenbauen
     } else {
-            $stmt_thumbs = "SELECT SQL_CALC_FOUND_ROWS id, filename, headline, photographer, picsize, timestamp FROM picture_data WHERE MATCH (filename, caption, headline, photographer, city, state, country, keywords, location) AGAINST ('*".$_POST['q']."*' IN BOOLEAN MODE) ORDER BY filename DESC LIMIT ".$start.",".$anzthumbs."";
+            $stmt_thumbs = "SELECT SQL_CALC_FOUND_ROWS id, filename, headline, photographer, picsize, timestamp FROM picture_data WHERE MATCH (filename, caption, headline, photographer, city, state, country, keywords, location) AGAINST ('*".$_POST['q']."*' IN BOOLEAN MODE) ORDER BY id DESC LIMIT ".$start.",".$anzthumbs."";
             $query_thumbs = mysqli_query($link, $stmt_thumbs);
 
             $stmt_count_thumbs = "Select FOUND_ROWS()";
@@ -82,7 +82,7 @@ function NixMarkieren(){
     } else {
         while ($out = mysqli_fetch_array($query_thumbs, MYSQLI_ASSOC)){
         	$html .= "<tr><td align=\"center\">".$out['id']."</td>";
-        	$html .= "<td align=\"center\"><a href=\"/".INSTALLPATH."/admin/bin/showimgdetails.php?id=".$out['id']."&width=170\" class=\"jTip\" id=\"".$out['id']."\" name=\"Vorschau:\"><img src=\"/".INSTALLPATH."/thumbs/".$out['filename']."\" border=\"0\" width=\"33\" height=\"22\"/></a></td>";
+        	$html .= "<td align=\"center\"><a href=\"/".INSTALLPATH."/detail.php?id=".$out['id']."\" onclick=\"detail('/".INSTALLPATH."/detail.php?id=".$out['id']."');return false;\"><img src=\"/".INSTALLPATH."/thumbs/".$out['filename']."\" border=\"0\" width=\"33\" height=\"22\"/></a></td>";
         	$html .= "<td>".$out['headline']."</td>";
         	$html .= "<td><a href=\"/".INSTALLPATH."/download.php?id=".$out['id']."\">".$out['filename']."</a></td>";
         	$html .= "<td>".$out['timestamp']."</td>";
