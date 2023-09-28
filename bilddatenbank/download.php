@@ -8,7 +8,7 @@
 		if(isset($_GET['id'])){
 
 				$id = intval(@$_GET['id']);
-				$id = mysql_real_escape_string($_GET['id']);
+				$id = mysqli_real_escape_string($link, $_GET['id']);
 
 		} else {
 
@@ -31,8 +31,8 @@
 
 		//Datenbankabfrage
 		$stmt_popup = "SELECT * FROM picture_data WHERE id = '$id'";
-		$query_popup = mysql_query($stmt_popup);
-		$result_popup = mysql_fetch_array($query_popup);
+		$query_popup = mysqli_query($link, $stmt_popup);
+		$result_popup = mysqli_fetch_array($query_popup, MYSQLI_ASSOC);
 
 		//Ueberpruefe, ob die id in der Datenbank existiert
 		if(isset($result_popup['id'])){
@@ -43,14 +43,14 @@
 			//Logging des Downloads
 			if($_SESSION['login'] != "probezugang"){
 				$stmt_log = "UPDATE users SET downloads = downloads+1 WHERE login = '".$_SESSION['login']."' LIMIT 1";
-                mysql_query($stmt_log);
+                mysqli_query($link, $stmt_log);
                 $stmt_count = "INSERT INTO downloads VALUES (NULL, '".$_SESSION['login']."', '".$result_popup['filename']."', CURRENT_TIMESTAMP, '".$_SERVER['REMOTE_ADDR']."')";
-                mysql_query($stmt_count);
+                mysqli_query($link, $stmt_count);
             } else {
                 $stmt_log = "UPDATE accessids SET downloads = downloads+1 WHERE hash = '".$_SESSION['accessid']."' LIMIT 1";
-                mysql_query($stmt_log);
+                mysqli_query($link, $stmt_log);
                 $stmt_count = "INSERT INTO downloads VALUES (NULL, '".$_SESSION['name']."', '".$result_popup['filename']."', CURRENT_TIMESTAMP, '".$_SERVER['REMOTE_ADDR']."')";
-                mysql_query($stmt_count);
+                mysqli_query($link, $stmt_count);
             }
 
 			//Ausgabe der Datei an den Browser
