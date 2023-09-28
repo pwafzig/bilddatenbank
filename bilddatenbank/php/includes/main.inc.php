@@ -102,6 +102,7 @@
 
 	  		$stmt_thumbs = "SELECT SQL_CALC_FOUND_ROWS id, filename, headline, keywords, object_name, transref, photographer, city, date, picsize FROM picture_data WHERE (".$datestring.") ORDER BY id ASC LIMIT 0,".$maxfiles."";
 	  		$query_thumbs = mysql_query($stmt_thumbs);
+
  	    }
 
 			//Keyword-Suche
@@ -120,16 +121,6 @@
 			$out_collection = mysqli_fetch_array($query_collection);
 
 			$stmt_thumbs = "SELECT SQL_CALC_FOUND_ROWS id, filename, headline, keywords, object_name, transref, photographer, city, date, picsize FROM picture_data WHERE id IN (".$out_collection['ids'].") ORDER BY object_name ASC LIMIT 0,".$maxfiles."";
-			$query_thumbs = mysqli_query($link, $stmt_thumbs);
- 	    }
-
-		//Datenfeld-Suche
- 	    elseif(isset($_GET['dbfield'])){
-			$q = explode(":",$_GET['dbfield']);
-			$type = $q[0];
-			$value = $q[1];
-
-			$stmt_thumbs = "SELECT SQL_CALC_FOUND_ROWS id, filename, headline, keywords, object_name, transref, photographer, picsize FROM picture_data WHERE (".$type." LIKE '%".$value."%') ORDER BY id ASC LIMIT 0,".$maxfiles."";
 			$query_thumbs = mysqli_query($link, $stmt_thumbs);
  	    }
 
