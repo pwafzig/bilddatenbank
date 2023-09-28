@@ -26,7 +26,7 @@
 			$q = mysqli_real_escape_string($link, $_GET['q']);
 			$q = preg_replace("/\/bilddatenbank\//", "", $q);
 
-			$stmt_thumbs = "SELECT SQL_CALC_FOUND_ROWS id, filename, headline, keywords, object_name, caption, transref, photographer, date, city, picsize FROM picture_data WHERE transref = '$q' ORDER BY date DESC, time DESC LIMIT 0,".$maxfiles."";
+			$stmt_thumbs = "SELECT SQL_CALC_FOUND_ROWS id, filename, headline, keywords, object_name, caption, transref, photographer, date, city, picsize FROM picture_data WHERE transref = '$q' ORDER BY id ASC LIMIT 0,".$maxfiles."";
 			$query_thumbs = mysqli_query($link, $stmt_thumbs);
  	    }
 
@@ -69,7 +69,7 @@
 
 			$q = preg_replace("/\"/iu", "", $q);
 			$condition = preg_replace("/@@q@@/", $q, $where);
-			$stmt_thumbs = "SELECT SQL_CALC_FOUND_ROWS id, filename, headline, keywords, object_name, transref, photographer, picsize, city, date FROM picture_data WHERE (".$condition.")".$dateselect." ORDER BY date DESC, time DESC LIMIT 0,".$maxfiles."";		
+			$stmt_thumbs = "SELECT SQL_CALC_FOUND_ROWS id, filename, headline, keywords, object_name, transref, photographer, picsize, city, date FROM picture_data WHERE (".$condition.")".$dateselect." ORDER BY id ASC LIMIT 0,".$maxfiles."";		
 
 			$query_thumbs = mysqli_query($link, $stmt_thumbs);
 	
@@ -87,14 +87,14 @@
 	  			$datestring = "date = ".$startdate."";
 	  		}
 
-	  		$stmt_thumbs = "SELECT SQL_CALC_FOUND_ROWS id, filename, headline, keywords, object_name, transref, photographer, city, date, picsize FROM picture_data WHERE (".$datestring.") ORDER BY date DESC, time DESC LIMIT 0,".$maxfiles."";
+	  		$stmt_thumbs = "SELECT SQL_CALC_FOUND_ROWS id, filename, headline, keywords, object_name, transref, photographer, city, date, picsize FROM picture_data WHERE (".$datestring.") ORDER BY id ASC LIMIT 0,".$maxfiles."";
 	  		$query_thumbs = mysql_query($stmt_thumbs);
  	    }
 
 			//Keyword-Suche
  	    elseif(isset($_GET['key'])){
 			$q = mysqli_real_escape_string($link, $_GET['key']);
-    		$stmt_thumbs = "SELECT SQL_CALC_FOUND_ROWS id, filename, headline, keywords, object_name, transref, photographer, city, date, picsize FROM picture_data WHERE keywords LIKE '%".$q."%' ORDER BY date DESC, time DESC LIMIT 0,".$maxfiles."";
+    		$stmt_thumbs = "SELECT SQL_CALC_FOUND_ROWS id, filename, headline, keywords, object_name, transref, photographer, city, date, picsize FROM picture_data WHERE keywords LIKE '%".$q."%' ORDER BY id ASC LIMIT 0,".$maxfiles."";
 			$query_thumbs = mysql_query($stmt_thumbs);
  	    }
 
@@ -116,13 +116,13 @@
 			$type = $q[0];
 			$value = $q[1];
 
-			$stmt_thumbs = "SELECT SQL_CALC_FOUND_ROWS id, filename, headline, keywords, object_name, transref, photographer, picsize FROM picture_data WHERE (".$type." LIKE '%".$value."%') ORDER BY date DESC, time DESC LIMIT 0,".$maxfiles."";
+			$stmt_thumbs = "SELECT SQL_CALC_FOUND_ROWS id, filename, headline, keywords, object_name, transref, photographer, picsize FROM picture_data WHERE (".$type." LIKE '%".$value."%') ORDER BY id ASC LIMIT 0,".$maxfiles."";
 			$query_thumbs = mysqli_query($link, $stmt_thumbs);
  	    }
 
 		//Darstellung aller Galerien mit Paginierung
 		else {
-			$stmt_thumbs = "SELECT SQL_CALC_FOUND_ROWS id, filename, headline, keywords, object_name, transref, photographer, picsize, city, date FROM picture_data GROUP BY transref, city, date ORDER BY date DESC, time DESC LIMIT ".$start.",".$anzthumbs."";
+			$stmt_thumbs = "SELECT SQL_CALC_FOUND_ROWS id, filename, headline, keywords, object_name, transref, photographer, picsize, city, date FROM picture_data GROUP BY transref, city, date ORDER BY id ASC LIMIT ".$start.",".$anzthumbs."";
 			$query_thumbs = mysqli_query($link, $stmt_thumbs);
 			//View ueberschreiben
 			$view = "gallery";
@@ -145,7 +145,7 @@
 		if($view == "single"){
 			
 			//Überschrift erzeugen
-			$query_title = "SELECT object_name FROM picture_data WHERE transref = '$q' LIMIT 1";
+			$query_title = "SELECT object_name FROM picture_data WHERE transref = '$q' ORDER BY id ASC LIMIT 1";
 			$result_title = mysqli_query($link, $query_title);
 			$out_title = mysqli_fetch_array($result_title, MYSQLI_ASSOC);
 			$title_gallery = $out_title['object_name'];

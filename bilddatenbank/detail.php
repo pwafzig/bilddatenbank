@@ -16,16 +16,22 @@
 	$query_popup = mysqli_query($link, $stmt_popup);
 	$result_popup = mysqli_fetch_array($query_popup, MYSQLI_ASSOC);
 
+	if(mysqli_num_rows($query_popup) == 0){
+		header($_SERVER["SERVER_PROTOCOL"]." 404 Not Found");
+		header("Status: 404 Not Found");
+		exit;
+	}
+
 	//Keywords formatieren
 	$keywords = explode(", ", $result_popup['keywords']);
 	$keywords_html = "";
 
 	for($i=0;$i<count($keywords);$i++) {
-	    	$keywords_html .= "<a href=\"/".INSTALLPATH."/tags/".$keywords[$i]."\" onclick=\"javascript:window.opener.parent.location.href = '/".INSTALLPATH."/tags/".$keywords[$i]."';self.close()\" class=\"textlink\">".$keywords[$i]."</a>, ";
+	    $keywords_html .= "<a href=\"/".INSTALLPATH."/tags/".$keywords[$i]."\" onclick=\"javascript:window.opener.parent.location.href = '/".INSTALLPATH."/tags/".$keywords[$i]."';self.close()\" class=\"textlink\">".$keywords[$i]."</a>, ";
 	}
 
 	//Dateigroesse ausrechnen
-	$pxsize = explode("x", $result_popup['picsize']);
+	$pxsize = explode("x", preg_replace("/px/", "", $result_popup['picsize']));
 	$xsize = $pxsize[0];
 	$ysize = $pxsize[1];
 
@@ -35,11 +41,11 @@
 	$printxsize = ceil(($xsize/150)*2.54);
 	$printysize = ceil(($ysize/150)*2.54);
 
-	$stmt_prev = "SELECT id, date, time FROM picture_data WHERE ((object_name = '".$result_popup['object_name']."') AND (time > '".$result_popup['time']."')) ORDER BY date ASC, time ASC LIMIT 1";
+	$stmt_prev = "SELECT id, date, time, transref FROM picture_data WHERE ((transref = '".$result_popup['transref']."') AND (id < '".$result_popup['id']."')) ORDER BY id DESC LIMIT 1";
 	$query_prev = mysqli_query($link, $stmt_prev);
 	$result_prev = mysqli_fetch_array($query_prev, MYSQLI_ASSOC);
 
-	$stmt_next = "SELECT id, date, time FROM picture_data WHERE ((object_name = '".$result_popup['object_name']."') AND (time < '".$result_popup['time']."')) ORDER BY date DESC, time DESC LIMIT 1";
+	$stmt_next = "SELECT id, date, time, transref FROM picture_data WHERE ((transref = '".$result_popup['transref']."') AND (id > '".$result_popup['id']."')) ORDER BY id ASC LIMIT 1";
 	$query_next = mysqli_query($link, $stmt_next);
 	$result_next = mysqli_fetch_array($query_next, MYSQLI_ASSOC);
 
@@ -62,14 +68,14 @@
 				</div>
 
 				<div id="det_navigate">
-					<?php if($result_prev['id'] != ""){ ?>
+					<?php if(isset($result_prev['id']) != ""){ ?>
 						<button class="btlft" onclick="location.href='detail.php?id=<?php echo $result_prev['id']?>'"><?php echo $TEXT['detail-previmage']?></button>
 					<?php } else { ?>
 						<button class="btlft inact"><?php echo $TEXT['detail-previmage']?></button>
 					<?php } ?>
 
 					<a href="/<?php echo INSTALLPATH; ?>/<?php echo $slug; ?>" style="color:#FFF"><button class="btcenter" onclick="javascript:window.opener.parent.location.href = '/<?php echo INSTALLPATH; ?>/<?php echo $result_popup['transref']; ?>'; self.close()"><?php echo $TEXT['detail-homelink']?></button></a>
-					<?php if($result_next['id'] != ""){ ?>
+					<?php if(isset($result_next['id']) != ""){ ?>
 						<button class="btrgt" onclick="location.href='detail.php?id=<?php echo $result_next['id']?>'"><?php echo $TEXT['detail-nextimage']?></button>
 					<?php } else { ?>
 						<button class="btrgt inact"><?php echo $TEXT['detail-nextimage']?></button>
