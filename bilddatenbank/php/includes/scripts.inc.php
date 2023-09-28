@@ -23,6 +23,6 @@
 	        http_request.send(null);
 	    }
 	</script>
-	<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.4/jquery.min.js" language="javascript"></script>
+	<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.4/jquery.min.js" language="javascript"></script>
 	<script type="text/javascript" src="/<?php echo INSTALLPATH; ?>/lib/thickbox/thickbox-compressed.js" language="javascript"></script>
 </head>
