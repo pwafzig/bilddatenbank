@@ -19,6 +19,7 @@
             $_SESSION['organisation']   =   $result_login['organisation'];
             $_SESSION['email']          =   $result_login['email'];
             $_SESSION['resolution']     =   $result_login['resolution'];
+            $_SESSION['lightboxids']    =   "";
 
             $stmt_log = "UPDATE users SET lastlogin = NOW( ) WHERE login = '".$login."' LIMIT 1";
             mysqli_query($link, $stmt_log);

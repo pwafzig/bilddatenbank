@@ -154,6 +154,8 @@
 							if(isset($_SESSION['lightboxids'])){
 								$ids = explode("|",$_SESSION['lightboxids']);
 								$anz_ids = sizeof($ids)-1;
+							} else {
+								$anz_ids = 0;
 							}
 				?>
 					<li><span class="ic-save">&nbsp;</span><a href="/<?php echo INSTALLPATH; ?>/download.php?id=<?php echo $result_popup['id']?>" class="textlink"><?php echo $TEXT['detail-download']?></a></li>
