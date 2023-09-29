@@ -17,9 +17,9 @@
 		if(isset($_POST['sent']) && $_POST['sent'] == "yes"){
 
 			if($_POST['password'] != "faked"){
-				$stmt = "UPDATE users SET login = '".$_POST['login']."', passwort = MD5( '".$_POST['password']."'), name = '".$_POST['name']."', organisation = '".$_POST['organisation']."', email = '".$_POST['email']."', resolution = '".$_POST['resolution']."' WHERE id = ".$_POST['id']." LIMIT 1";
+				$stmt = "UPDATE users SET login = '".$_POST['login']."', passwort = MD5( '".$_POST['password']."'), name = '".$_POST['name']."', prename = '".$_POST['prename']."', organisation = '".$_POST['organisation']."', email = '".$_POST['email']."', resolution = '".$_POST['resolution']."' WHERE id = ".$_POST['id']." LIMIT 1";
 			} else {
-				$stmt = "UPDATE users SET login = '".$_POST['login']."', name = '".$_POST['name']."', organisation = '".$_POST['organisation']."', email = '".$_POST['email']."', resolution = '".$_POST['resolution']."' WHERE id = ".$_POST['id']." LIMIT 1";
+				$stmt = "UPDATE users SET login = '".$_POST['login']."', name = '".$_POST['name']."', prename = '".$_POST['prename']."', organisation = '".$_POST['organisation']."', email = '".$_POST['email']."', resolution = '".$_POST['resolution']."' WHERE id = ".$_POST['id']." LIMIT 1";
 			}
 
 			$query = mysqli_query($link, $stmt);
@@ -92,7 +92,11 @@
 			<fieldset>
 				<legend>Benutzer bearbeiten</legend>
 					<dl>
-		        		<dt><label for="name">Name:</label></dt>
+		        		<dt><label for="prename">Vorname:</label></dt>
+        		    	<dd><input type="text" name="prename" id="prename" size="32" maxlength="128" value="<?php echo $out[4]?>" /></dd>
+        			</dl>
+					<dl>
+		        		<dt><label for="name">Nachname:</label></dt>
         		    	<dd><input type="text" name="name" id="name" size="32" maxlength="128" value="<?php echo $out[3]?>" /></dd>
         			</dl>
 					<dl>
@@ -140,7 +144,8 @@
 	if(isset($_GET['action']) && $_GET['action'] == "add"){
 
 		if(isset($_POST['sent']) && $_POST['sent'] == "yes"){
-			$stmt = "INSERT INTO users (id, login, passwort, name, prename, organisation, email, lang, resolution, downloads, timestamp, lastlogin) VALUES (NULL, '".$_POST['login']."', MD5('".$_POST['password']."'), '".$_POST['name']."', '', '".$_POST['organisation']."', '".$_POST['email']."', '".$_POST['lang']."', '".$_POST['resolution']."', '0', CURRENT_TIMESTAMP, '0000-00-00 00:00:00');";
+			$stmt = "INSERT INTO users (id, login, passwort, name, prename, organisation, email, lang, resolution, downloads, timestamp, lastlogin) VALUES (NULL, '".$_POST['login']."', MD5('".$_POST['password']."'), '".$_POST['name']."', '".$_POST['prename']."', '".$_POST['organisation']."', '".$_POST['email']."', '".$_POST['lang']."', '".$_POST['resolution']."', '0', CURRENT_TIMESTAMP, CURRENT_TIME())";
+
 			$query = mysqli_query($link, $stmt);
 			if (!$query) {
     			die('Datenbankfehler: ' . mysqli_error($link));
@@ -280,9 +285,13 @@
 
 		<form action="<?php echo $_SERVER['PHP_SELF']?>?action=add" method="POST" name="edituser" id="binform">
 			<fieldset>
-				<legend>Benutzer bearbeiten</legend>
+				<legend>Benutzer anlegen</legend>
 					<dl>
-		        		<dt><label for="name">Name:</label></dt>
+		        		<dt><label for="prename">Vorname:</label></dt>
+        		    	<dd><input type="text" name="prename" id="prename" size="32" maxlength="128" value="" /></dd>
+        			</dl>
+					<dl>
+		        		<dt><label for="name">Nachname:</label></dt>
         		    	<dd><input type="text" name="name" id="name" size="32" maxlength="128" value="" /></dd>
         			</dl>
 					<dl>
