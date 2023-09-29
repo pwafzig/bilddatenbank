@@ -65,7 +65,7 @@ INSERT INTO `konfig` (`id`, `value`, `key`) VALUES
 (23, 'keywords', ''),
 (24, 'telnr', ''),
 (25, 'anznewfiles', '10'),
-(26, 'maxfiles', '250');
+(26, 'maxfiles', '250'),
 (27, 'smtphost', ''),
 (28, 'smtplogin', ''),
 (29, 'smtppass', ''),
