@@ -6,10 +6,10 @@
 			for ($i="0"; $i<count($_POST['killpath']); $i++) {
 
 				//Unlink auf Data, Preview und Thumbs
-		    	$prevpath 	= DOCROOT.INSTALLPATH."/previews/".$_POST['killpath'][$i];
-		    	$lowrespath = DOCROOT.INSTALLPATH."/lowres/".$_POST['killpath'][$i];
-		   		$thumbpath 	= DOCROOT.INSTALLPATH."/thumbs/".$_POST['killpath'][$i];
-		    	$datapath 	= DOCROOT.INSTALLPATH."/data/".$_POST['killpath'][$i];
+		    	$prevpath 	= DOCROOT."/".INSTALLPATH."/previews/".$_POST['killpath'][$i];
+		    	$lowrespath = DOCROOT."/".INSTALLPATH."/lowres/".$_POST['killpath'][$i];
+		   		$thumbpath 	= DOCROOT."/".INSTALLPATH."/thumbs/".$_POST['killpath'][$i];
+		    	$datapath 	= DOCROOT."/".INSTALLPATH."/data/".$_POST['killpath'][$i];
 
 			    if((!unlink($prevpath)) OR (!unlink($lowrespath) OR (!unlink($thumbpath)) OR (!unlink($datapath)))){
 
@@ -23,7 +23,7 @@
 
 			      	//Eintrag aus Datenbank loeschen
 					$stmt = "DELETE FROM picture_data WHERE filename = '".$_POST['killpath'][$i]."'";
-					if (!mysql_query($stmt, $link)) {
+					if (!mysqli_query($link, $stmt)) {
     					logfile(mysql_errno($link) . ": " . mysql_error($link), "error");
 					} else {
 						logfile("Deleted ".$_POST['killpath'][$i]." from database", "bilddatenbank");
