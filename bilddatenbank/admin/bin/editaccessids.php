@@ -142,7 +142,7 @@
 			//Datum umformatieren
 			$date = $_POST['jahr'].$_POST['monat'].$_POST['tag'];
 
-			$stmt = "INSERT INTO accessids (id, hash, date, bemerkung, name, resolution, downloads, timestamp, lastlogin) VALUES (NULL, MD5('".$hash."'), '".$date."', '".utf8_decode($_POST['bemerkung'])."', '".utf8_decode($_POST['name'])."', '".$_POST['resolution']."', '0', CURRENT_TIMESTAMP, '0000-00-00 00:00:00');";
+			$stmt = "INSERT INTO accessids (id, hash, date, bemerkung, name, resolution, downloads, timestamp, lastlogin) VALUES (NULL, MD5('".$hash."'), '".$date."', '".utf8_decode($_POST['bemerkung'])."', '".utf8_decode($_POST['name'])."', '".$_POST['resolution']."', '0', CURRENT_TIMESTAMP, CURRENT_TIME())";
 			$query = mysqli_query($link, $stmt);
 			if (!$query) {
     			die('Datenbankfehler: ' . mysqli_error($link));
