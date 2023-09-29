@@ -1,6 +1,6 @@
 <?php
 
-	if(!isset($_GET['q']) && !isset($_GET['rewrite'])){
+	if(!isset($_GET['q']) && !isset($_GET['rewrite']) && !isset($_GET['collection']) && !isset($_GET['key']) && !isset($_GET['date'])){
 
 	    //Seitenzahl festlegen bzw. am Anfang nullen
 	    if(!isset($_GET['page'])){
