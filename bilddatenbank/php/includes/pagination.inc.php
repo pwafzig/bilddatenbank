@@ -25,11 +25,11 @@
 			$stmt_thumbs = "SELECT SQL_CALC_FOUND_ROWS id, filename, headline, photographer, picsize FROM picture_data ORDER BY date DESC, time DESC LIMIT ".$start.",".$anzthumbs."";
 		}
 
-		$query_thumbs = mysql_query($stmt_thumbs);
+		$query_thumbs = mysqli_query($link, $stmt_thumbs);
 
         $stmt_count_thumbs = "Select FOUND_ROWS()";
-        $query_count_thumbs = mysql_query($stmt_count_thumbs);
-        $num_files = mysql_result($query_count_thumbs, 0);
+        $query_count_thumbs = mysqli_query($link, $stmt_count_thumbs);
+        $num_files = mysqli_num_rows($query_count_thumbs);
 
 	    if(isset($_GET['q'])){
 	    	$q = $_GET['q'];
