@@ -132,7 +132,7 @@
 
 	//Darstellung aller Galerien mit Paginierung
 	else {
-		$stmt_thumbs = "SELECT id, filename, headline, keywords, object_name, transref, photographer, picsize, city, date FROM picture_data GROUP BY transref, city, date ORDER BY id ASC LIMIT ".$start.",".$anzthumbs."";
+		$stmt_thumbs = "SELECT t1.id, t1.filename, t1.headline, t1.keywords, t1.object_name, t1.transref, t1.photographer, t1.picsize, t1.city, t1.date FROM picture_data t1 INNER JOIN ( SELECT MIN(id) AS min_id FROM picture_data GROUP BY transref ) t2 ON t1.id = t2.min_id ORDER BY t2.min_id ASC LIMIT ".$start.",".$anzthumbs."";
 		$query_thumbs = mysqli_query($link, $stmt_thumbs);
 		$view = "gallery";
 	}

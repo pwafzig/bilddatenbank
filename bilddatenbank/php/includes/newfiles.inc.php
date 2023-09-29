@@ -1,7 +1,10 @@
 <h2><?php echo $TEXT['neue-title']?>:</h2>
 <?php
 
-		$stmt_newfiles = "SELECT DISTINCT transref, object_name, date FROM `picture_data` GROUP BY transref ORDER BY date DESC, time DESC LIMIT 0,".$CONFIG['anznewfiles'];
+		$stmt_newfiles = "SELECT t1.object_name, t1.transref, t1.date FROM picture_data t1 INNER JOIN ( SELECT MIN(id) AS min_id FROM picture_data GROUP BY transref ) t2 ON t1.id = t2.min_id ORDER BY t2.min_id ASC LIMIT 0,".$CONFIG['anznewfiles'];
+
+
+
 		$query_newfiles = mysqli_query($link, $stmt_newfiles);
 
 		$newfiles = "";

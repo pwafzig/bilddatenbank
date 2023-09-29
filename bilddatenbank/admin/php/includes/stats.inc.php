@@ -25,7 +25,7 @@
 	echo $html;
 	
 	
-	$stmt = "SELECT COUNT(downloads.filename) AS hits, downloads.filename AS filename, picture_data.id AS id FROM downloads, picture_data WHERE (picture_data.filename = downloads.filename) GROUP BY filename ORDER BY hits DESC LIMIT 0,10";
+	$stmt = "SELECT d.filename AS filename, d.hits AS hits, pd.id AS id FROM ( SELECT downloads.filename AS filename, COUNT(downloads.filename) AS hits FROM downloads GROUP BY downloads.filename LIMIT 10 ) AS d JOIN picture_data AS pd ON d.filename = pd.filename ORDER BY hits DESC";
 
 	$query = mysqli_query($link, $stmt);
 
@@ -43,6 +43,5 @@
 
 	$html .= "</tbody></table>\n";
 	echo $html;	
-	
 
 ?>
