@@ -23,7 +23,7 @@
 		<table width="100%" id="thumbs">
 				<?php include(DOCROOT.INSTALLPATH."/php/includes/pagination.inc.php"); ?>
 				<?php include(DOCROOT.INSTALLPATH."/php/includes/main.inc.php"); ?>
-				<?php include(DOCROOT.INSTALLPATH."/php/includes/pagination.inc.php"); ?>
+				<?php echo $pagination; ?>
 		</table>
 	</td>
 	<td width="2" class="vertline">
