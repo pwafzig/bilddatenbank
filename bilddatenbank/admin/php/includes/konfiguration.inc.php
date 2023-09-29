@@ -87,11 +87,27 @@
         		</dl>
         		<dl>
 					<dt><label for="password">Admin-Passwort:</label></dt>
-				   	<dd><input type="text" name="password" id="password" size="32" maxlength="128" value="<?php echo $password; ?>" /></dd>
+				   	<dd><input type="password" name="password" id="password" size="32" maxlength="128" value="<?php echo $password; ?>" /></dd>
         		</dl>
         		<dl>
 					<dt><label for="sendemail">Versand Email:</label></dt>
 				   	<dd><input type="text" name="sendemail" id="sendemail" size="32" maxlength="128" value="<?php echo $sendemail; ?>" /></dd>
+        		</dl>
+        		<dl>
+					<dt><label for="smtphost">SMTP Host:</label></dt>
+				   	<dd><input type="text" name="smtphost" id="smtphost" size="32" maxlength="128" value="<?php echo $smtphost; ?>" /></dd>
+        		</dl>
+        		<dl>
+					<dt><label for="smtplogin">SMTP User:</label></dt>
+				   	<dd><input type="text" name="smtplogin" id="smtplogin" size="32" maxlength="128" value="<?php echo $smtplogin; ?>" /></dd>
+        		</dl>
+        		<dl>
+					<dt><label for="smtppass">SMTP Passwort:</label></dt>
+				   	<dd><input type="password" name="smtppass" id="smtppass" size="32" maxlength="128" value="<?php echo $smtppass; ?>" /></dd>
+        		</dl>
+        		<dl>
+					<dt><label for="smtpport">SMTP Port:</label></dt>
+				   	<dd><input type="text" name="smtpport" id="smtpport" size="32" maxlength="128" value="<?php echo $smtpport; ?>" /></dd>
         		</dl>
         		<dl>
 					<dt><label for="robots">Suchmaschinenzugriff:</label></dt>
