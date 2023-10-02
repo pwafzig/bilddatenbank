@@ -51,6 +51,29 @@
 			-webkit-border-radius: 5px;
 			border-radius: 5px;
 		}
+
+		.retry {
+			border: 3px solid #ebc034;
+			background-color: #ebdf34;
+			padding: 3px 20px 3px 20px;
+			font-size: 105%;
+			font-weight: bold;
+			cursor: pointer;
+			-moz-border-radius: 5px;
+			-webkit-border-radius: 5px;
+			border-radius: 5px;
+		}
+		pre code {
+			background-color: #eee;
+			border: 1px solid #999;
+			display: block;
+			padding: 20px;
+			font-size: 125%;
+		}
+		input:read-only {
+			background-color: #e1e1e1;
+			border: 1px solid #a1a1a1;
+		}
 	</style>
 </head>
 <body>
@@ -59,231 +82,199 @@
 
 <?php if(!isset($_POST['submit'])) { ?>
 
-<h3>Überprüfung der benötigten Komponenten</h3>
+<h3>Checking your basic server configuration</h3>
 <p><?php
+	//Don't use trailing slashes in your document root, this non standard and breaks a ton of things...
+	if (substr($_SERVER['DOCUMENT_ROOT'], -1) != '/'){
+		echo "Your DOCUMENT_ROOT variable has no trailing slash... <span class=\"okay\">OK</span><br />";
+	} else {
+		echo "Your DOCUMENT_ROOT variable contains a trailing slash (e.g. /var/www/bilddatenbank/) <span class=\"fault\">this is a non-standard configuration</span> please remove the trailing slash before continuing...<br />";
+		echo "<br /><button name=\"reload\" class=\"retry\" onClick=\"window.location.reload();\">Retry...</button>";
+		exit;
+	} 
+?>
 
-	$extensions = get_loaded_extensions();
+<?php if(!isset($_GET['httpscheck']) OR $_GET['httpscheck'] != "true"){ ?>
+<hr border="0" noshade size="1" color="#FFF" class="ruler">
+<h3>Checking HTTPS</h3>
+<p><?php
+	//You should use https but we allow you to dismiss ist
+	if ((!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off') || $_SERVER['SERVER_PORT'] == 443){
+		echo "Your server is running HTTPS... <span class=\"okay\">OK</span><br />";
+	} else {
+		echo "Your server isn't running HTTPS: <span class=\"fault\">This is a security risk, we strongly advise to set it up running HTTPS!</span><br />";
+		echo "<br /><button name=\"reload\" class=\"retry\" onClick=\"window.open('".$_SERVER['PHP_SELF']."?httpscheck=true', '_self');\">Dismiss or retry...</button>";
+		exit;
+	} 
+?>
+</p>
+<?php } else { ?>
+<hr border="0" noshade size="1" color="#FFF" class="ruler">
+<h3>Checking HTTPS</h3>
+HTTPS check done or dismissed... <span class=\"okay\">OK</span><br />
+</p>
+<?php } ?>
 
-	if (!in_array('zlib', $extensions)) {
-		echo "Die Funktion ZLib ist nicht vorhanden... <span class=\"fault\">FEHLER</span><br />";
+
+<hr border="0" noshade size="1" color="#FFF" class="ruler">
+<h3>Checking PHP version</h3>
+<p><?php
+	//PHP version needs to be at least 8.something
+	$version = substr(phpversion("Core"), 0, 1);
+	if ($version < 8) {
+		echo "PHP version seems to be lower than 8.0... <span class=\"fault\">You need to update at least to version 8!</span><br />";
 		exit;
 	} else {
-		echo "Die Funktion ZLib ist vorhanden... <span class=\"okay\">OK</span><br />";
-	}
+		echo "PHP version 8 or higher... <span class=\"okay\">OK</span><br />";
+	}	
+?>
+</p>
 
-	if (!in_array('session', $extensions)) {
-		echo "Sessions sind nicht aktiviert... <span class=\"fault\">FEHLER</span><br />";
-		exit;
-	} else {
-		echo "Sessions sind aktiviert... <span class=\"okay\">OK</span><br />";
-	}
 
-	if (!in_array('zip', $extensions)) {
-		echo "Die Funktion ZIP ist nicht vorhanden... <span class=\"fault\">FEHLER</span><br />";
-		exit;
-	} else {
-		echo "Die Funktion ZIP ist vorhanden... <span class=\"okay\">OK</span><br />";
-	}
+<hr border="0" noshade size="1" color="#FFF" class="ruler">
+<h3>Checking server software</h3>
+<p><?php 
+	//checking which server software you are using
+	if(!isset($_SERVER["SERVER_SOFTWARE"])){
+		echo "Your server software isn't detectable... <span class=\"okay\">OK</span><br />";
+	} elseif (preg_match("/Apache/i", $_SERVER["SERVER_SOFTWARE"])){
+		$server_software = "apache";
+		echo "You are using Apache... <span class=\"okay\">OK</span><br />";
 
-	if (!in_array('exif', $extensions)) {
-		echo "Die Bilddatenbank benötigt die Funktion EXIF... <span class=\"fault\">FEHLER</span><br />";
-		exit;
-	} else {
-		echo "Die Funktion EXIF ist vorhanden... <span class=\"okay\">OK</span><br />";
-	}
+		if (!in_array('mod_rewrite', apache_get_modules())) {
+			echo "PHP Function Apache Rewrite is not activated... <span class=\"fault\">ERROR</span><br />";
+			exit;
+		} else {
+			echo "PHP Function Apache Rewrite activated... <span class=\"okay\">OK</span><br />";
+		}
 
-	if (!in_array('gd', $extensions)) {
-		echo "Die Bilddatenbank benötigt die Funktion GDLib... <span class=\"fault\">FEHLER</span><br />";
-		exit;
-	} else {
-		echo "Die Funktion GDLib ist vorhanden... <span class=\"okay\">OK</span><br />";
-	}
+	} elseif (preg_match("/nginx/i", $_SERVER["SERVER_SOFTWARE"])){
+		$server_software = "nginx";
+		echo "You are using nginx... ";
+		echo "<strong>Make sure your server configuration uses the following redirect:</strong><br /><br />";
+	?>
+	<pre>
+		<code>location / {
+  try_files $uri $uri/ /bilddatenbank/index.php?path=$request_uri&rewrite=true;
+}</code>
+    </pre>
 
-	if (!function_exists("mysqli_query") && !function_exists("mysqli_set_charset")) {
-    	echo "Die Bilddatenbank benötigt eine MySQL Datenbank, es sind aber weder <a href=\"http://php.net/mysql\">MySQL</a> oder die <a href=\"http://php.net/mysqli\">MySQLi</a> Erweiterung installiert.";
-    	exit;
-    } else {
-		echo "MySQL vorhanden... <span class=\"okay\">OK</span><br />";
-	}
+<?php }
+	$extensions_available = get_loaded_extensions();
+	$extensions = array("zlib", "session", "zip", "exif", "gd", "mysqli", "pcre"); 
+	$install = true;
 
-    if (!@preg_match("/^.$/u", utf8_encode("\xF1"))) {
-    	echo "Die Bilddatenbank benötigt die <a href=\"http://php.net/pcre\">Perl-Compatible Regular Expression</a>-Funktion.";
-    	exit;
-    } else {
-		echo "Die Funktion PCRE ist vorhanden... <span class=\"okay\">OK</span><br />";
+	foreach ($extensions as $extension) {
+  		if (!in_array($extension, $extensions_available)) {
+    		echo "Extension ".$extension." is not available ... <span class=\"fault\">ERROR</span><br />";
+    		$install = false;
+    	} else {
+			echo "Extension ".$extension." is available ...  <span class=\"okay\">OK</span><br />";
+		}
 	}
 
 	if (ini_get("safe_mode")) {
-    	echo "Die Bilddatenbank funktioniert nicht mit eingeschaltetem <a href=\"http://php.net/manual/en/features.safe-mode.php\">Safe Mode</a>. Bitte deaktivieren Sie den Safe Mode.";
-    	exit;
+    	echo "Safe Mode active - needs to be turned off.";
+    	$install = false;
     } else {
-		echo "Safe Mode ist aus... <span class=\"okay\">OK</span><br />";
+		echo "Safe Mode is off... <span class=\"okay\">OK</span><br />";
 	}
 
-?></p>
-
-<hr border="0" noshade size="1" color="#FFF" class="ruler">
-<h3>Prüfung der Verzeichnisse</h3>
-<?php
-	if (!is_writeable("../../config.inc.php")) {
-    	echo "Die Datei <strong>config.inc.php</strong> muss beschreibbar sein... <span class=\"fault\">FEHLER</span>";
-    	exit;
-    } else {
-		echo "Datei <strong>config.inc.php</strong> ist beschreibbar... <span class=\"okay\">OK</span><br />";
-	}
-
-	if (!is_writeable("../secure/dbconnect.inc.php")) {
-    	echo "Die Datei <strong>/secure/dbconnect.inc.php</strong> muss beschreibbar sein... <span class=\"fault\">FEHLER</span>";
-    	exit;
-    } else {
-		echo "Datei <strong>dbconnect.inc.php</strong> ist beschreibbar... <span class=\"okay\">OK</span><br />";
-	}
-
-	if (!is_writeable("../.htaccess")) {
-    	echo "Die Datei <strong>/.htaccess</strong> muss beschreibbar sein... <span class=\"fault\">FEHLER</span>";
-    	exit;
-    } else {
-		echo "Datei <strong>.htaccess</strong> ist beschreibbar... <span class=\"okay\">OK</span><br />";
-	}
-
-	if (!is_writeable("../bin/")) {
-    	echo "Das Verzeichnis <strong>bin</strong> muss beschreibbar sein... <span class=\"fault\">FEHLER</span>";
-    	exit;
-    } else {
-		echo "Verzeichnis <strong>bin</strong> ist beschreibbar... <span class=\"okay\">OK</span><br />";
-	}
-
-	if (!is_writeable("../logs/")) {
-    	echo "Das Verzeichnis <strong>logs</strong> muss beschreibbar sein... <span class=\"fault\">FEHLER</span>";
-    	exit;
-    } else {
-		echo "Verzeichnis <strong>logs</strong> ist beschreibbar... <span class=\"okay\">OK</span><br />";
-	}
-
-	if (!is_writeable("../admin/backup/")) {
-    	echo "Das Verzeichnis <strong>admin/backup</strong> muss beschreibbar sein... <span class=\"fault\">FEHLER</span>";
-    	exit;
-    } else {
-		echo "Verzeichnis <strong>admin/backup</strong> ist beschreibbar... <span class=\"okay\">OK</span><br />";
-	}
-
-	if (!is_writeable("../data/")) {
-    	echo "Das Verzeichnis <strong>data</strong> muss beschreibbar sein... <span class=\"fault\">FEHLER</span>";
-    	exit;
-    } else {
-		echo "Verzeichnis <strong>data</strong> ist beschreibbar... <span class=\"okay\">OK</span><br />";
-	}
-	
-	if (!is_writeable("../lowres/")) {
-    	echo "Das Verzeichnis <strong>lowres</strong> muss beschreibbar sein... <span class=\"fault\">FEHLER</span>";
-    	exit;
-    } else {
-		echo "Verzeichnis <strong>lowres</strong> ist beschreibbar... <span class=\"okay\">OK</span><br />";
+	if($install != true){
+		echo "<br /><button name=\"reload\" class=\"retry\" onClick=\"window.location.reload();\">Retry...</button>";
+		exit;
 	}	
-
-	if (!is_writeable("../previews/")) {
-    	echo "Das Verzeichnis <strong>previews</strong> muss beschreibbar sein... <span class=\"fault\">FEHLER</span>";
-    	exit;
-    } else {
-		echo "Verzeichnis <strong>previews</strong> ist beschreibbar... <span class=\"okay\">OK</span><br />";
-	}
-
-	if (!is_writeable("../thumbs/")) {
-    	echo "Das Verzeichnis <strong>thumbs</strong> muss beschreibbar sein... <span class=\"fault\">FEHLER</span>";
-    	exit;
-    } else {
-		echo "Verzeichnis <strong>thumbs</strong> ist beschreibbar... <span class=\"okay\">OK</span><br />";
-	}
-
-	if (!is_writeable("../temp/")) {
-    	echo "Das Verzeichnis <strong>temp</strong> muss beschreibbar sein... <span class=\"fault\">FEHLER</span>";
-    	exit;
-    } else {
-		echo "Verzeichnis <strong>temp</strong> ist beschreibbar... <span class=\"okay\">OK</span><br />";
-	}
-?>
-<hr border="0" noshade size="1" color="#FFF" class="ruler">
-<h3>Eingabe der Basisdaten</h3>
-<p>
-<form action="<?php echo $_SERVER['PHP_SELF']; ?>" method="POST" name="install" id="install">
-
-<label for="hostname">URL der Bilddatenbank (ohne http://, nur ausfüllen, wenn abweichend)</label><br />
-<input type="text" name="hostname" size="90" value="<?php echo $_SERVER['HTTP_HOST']; ?>"><br /><br />
-
-<label for="docroot">Document-Root-Verzeichnis: (nur ausfüllen, wenn leer)</label><br />
-
-<?php
-
-	$docroot = $_SERVER['DOCUMENT_ROOT']."/";
-	$docroot = str_replace ("//", "/", $docroot);
-
-?>
-
-<input type="text" name="docroot" size="90" value="<?php echo $docroot; ?>"><br /><br />
-
-<label for="installpath">Installationsverzeichnis (nur ausfüllen, wenn leer):</label><br />
-
-<?php
-
-	$installpath = $_SERVER['PHP_SELF'];
-	$installpath = explode("/",$installpath);
-	$installpath = $installpath[1];
-
-?>
-
-<input type="text" name="installpath" size="90" value="<?php echo $installpath; ?>"><br /><br />
-
-<label for="email">Admin-Emailadresse</label><br />
-<input type="text" name="email" size="90"><br /><br />
-
-<?php $shebang = @exec('which php'); ?>
-
-<label for="shebang">Pfad zur PHP-Executable</label><br />
-<input type="text" name="shebang" size="90" value="<?php echo $shebang; ?>"><br /><br />
+?>	
 </p>
 
 <hr border="0" noshade size="1" color="#FFF" class="ruler">
-<h3>Eingabe der Datenbankdaten</h3>
+<h3>Checking directories</h3>
+<?php
+
+	$directories = array("/bilddatenbank", "/bilddatenbank/bin", "/bilddatenbank/secure", "/bilddatenbank/logs", "/bilddatenbank/temp", "/bilddatenbank/admin/backup", "/bilddatenbank/data", "/bilddatenbank/lowres", "/bilddatenbank/thumbs", "/bilddatenbank/previews"); //TODO: remove /bilddatenbank and make install dire flexible
+	$install = true;
+
+	foreach ($directories as $directory) {
+  		if (!is_writeable($_SERVER['DOCUMENT_ROOT'].$directory)) {
+    		echo "Directory ".$directory." is not writeable... <span class=\"fault\">ERROR</span><br />";
+    		$install = false;
+    	} else {
+			echo "Directory ".$directory." is writeable......  <span class=\"okay\">OK</span><br />";
+		}
+	}
+
+	if($install != true){
+		echo "<br /><button name=\"reload\" class=\"retry\" onClick=\"window.location.reload();\">Retry...</button>";
+		exit;
+	}	
+
+?>
+<hr border="0" noshade size="1" color="#FFF" class="ruler">
+<h3>Basic install data</h3>
 <p>
-<label for="dbname">Datenbankname</label><br />
+<form action="<?php echo $_SERVER['PHP_SELF']; ?>" method="POST" name="install" id="install">
+<input type="hidden" name="server_software" value="<?php echo $server_software; ?>">
+
+<?php
+	//find executable
+	$php_executable = PHP_BINDIR."/php"; 
+	//find installpath
+	$installpath = $_SERVER['PHP_SELF'];
+	$installpath = explode("/",$installpath);
+	$installpath = $installpath[1];
+?>
+
+<input type="hidden" name="php_executable" size="90" value="<?php echo $php_executable; ?>">
+
+<label for="hostname">URL</label><br />
+<input type="text" name="hostname" size="90" value="<?php echo $_SERVER['HTTP_HOST']; ?>" readonly><br /><br />
+
+<label for="docroot">Document root path</label><br />
+<input type="text" name="docroot" size="90" value="<?php echo $_SERVER['DOCUMENT_ROOT'] ?>" readonly><br /><br />
+
+<label for="installpath">Install directory:</label><br />
+
+<input type="text" name="installpath" size="90" value="<?php echo $installpath; ?>" readonly><br /><br />
+
+<label for="email">Admin email</label><br />
+<input type="text" name="email" size="90" placeholder="name@email.com"><br /><br />
+
+
+
+<hr border="0" noshade size="1" color="#FFF" class="ruler">
+<h3>Database connection data</h3>
+<p>
+<label for="dbname">Database name</label><br />
 <input type="text" name="dbname" size="50" value=""><br /><br />
 
-<label for="dbuser">Benutzer</label><br />
+<label for="dbuser">User</label><br />
 <input type="text" name="dbuser" size="50" value=""><br /><br />
 
-<label for="dbpass">Passwort</label><br />
+<label for="dbpass">Password</label><br />
 <input type="text" name="dbpass" size="50" value=""><br /><br />
 
-<label for="dbhost">Host (nur ausfüllen, wenn abweichend)</label><br />
+<label for="dbhost">Host (should be "localhost" unless you use a external mysql server)</label><br />
 <input type="text" name="dbhost" size="50" value="localhost"><br /><br />
 
-<strong>Sind alle eingaben richtig? Okay, dann <input type="submit" name="submit" value="&nbsp;&nbsp;&nbsp;Installation jetzt starten...&nbsp;&nbsp;&nbsp;" class="absenden">
+<strong>Everything correct? Then: <input type="submit" name="submit" value="&nbsp;&nbsp;&nbsp;Start installation...&nbsp;&nbsp;&nbsp;" class="absenden">
 </form>
 </p>
 
 <?php } else { ?>
 
-<h3>Einrichten der Datenbank</h3>
+<h3>Setup database</h3>
 <p>
 
 <?php
 
 	//Datenbankverbindung aufbauen
-
-	$link = mysqli_connect($_POST['dbhost'], $_POST['dbuser'], $_POST['dbpass']);
+	mysqli_report(MYSQLI_REPORT_OFF);
+	$link = @mysqli_connect($_POST['dbhost'], $_POST['dbuser'], $_POST['dbpass'], $_POST['dbname']);
+	
 	if (!$link) {
-		echo "Verbindung mit den angegebenen Daten nicht möglich... <span class=\"fault\">FEHLER</span><br >";
-		exit;
+		die("Connection failed: " . mysqli_connect_error() . " - please check your database credentials!");
 	} else {
-		echo "Verbindungsdaten korrekt... <span class=\"okay\">OK</span><br />";
-	}
-
-	$db_selected = mysqli_select_db($link, $_POST['dbname']);
-	if (!$db_selected) {
-		echo "Die Datenbank ".$_POST['dbname']." exisitiert nicht... <span class=\"fault\">FEHLER</span><br />";
-		exit;
-	} else {
-		echo "Datenbank konnektiert... <span class=\"okay\">OK</span><br />";
+		echo "Connection data... <span class=\"okay\">OK</span><br />";
 	}
 
 	//Datenbank import starten
@@ -302,10 +293,10 @@
 		$result = mysqli_query($link, $imp);
 
 			if(!$result) {
-				echo "Fehler beim Einrichten der Datenbank... <span class=\"fault\">FEHLER</span><br /><pre>".mysqli_error()."</pre>";
+				echo "Database file could not be imported... <span class=\"fault\">ERROR</span><br /><pre>".mysqli_error()."</pre>";
 				exit;
 			} else {
-				$out = "Datenbank eingerichtet... <span class=\"okay\">OK</span><br />";
+				$out = "Database import... <span class=\"okay\">OK</span><br />";
 			}
 		}
 	}
@@ -315,26 +306,25 @@
 ?>
 
 </p>
-<h3>Dateien schreiben</h3>
+<h3>Write files</h3>
 <p>
 
 <?php
 
-
 	//Templates laden und Dateien schreiben
 	//config.inc.php
 
-	$shebang = $_POST['shebang'];
+	$shebang = $_POST['php_executable'];
 
 	$config = file_get_contents("templates/config.inc.php");
 	$config = preg_replace("/@@INSTALLPATH@@/", $_POST['installpath'], $config);
 	$config = preg_replace("/@@DOCROOT@@/", $_POST['docroot'], $config);
 	$config = preg_replace("/@@HTTPHOST@@/", $_POST['hostname'], $config);
 
-	file_put_contents("../../config.inc.php", $config);
-	@chmod ("../../config.inc.php", 0644);
+	file_put_contents($_POST['docroot']."/config.inc.php", $config);
+	@chmod ($_POST['docroot']."/config.inc.php", 0644);
 
-	echo "Datei <strong>config.inc.php</strong> geschrieben... <span class=\"okay\">OK</span><br />";
+	echo "File <strong>config.inc.php</strong> successfully written... <span class=\"okay\">OK</span><br />";
 
 	//dbconnect.inc.php
 
@@ -344,24 +334,26 @@
 	$dbconnect = preg_replace("/@@DBNAME@@/", $_POST['dbname'], $dbconnect);
 	$dbconnect = preg_replace("/@@DBPASS@@/", $_POST['dbpass'], $dbconnect);
 
-	file_put_contents("../secure/dbconnect.inc.php", $dbconnect);
-	@chmod ("../secure/dbconnect.inc.php", 0644);
-	echo "Datei <strong>connect.inc.php</strong> geschrieben... <span class=\"okay\">OK</span><br />";
+	file_put_contents($_POST['docroot']."/".$_POST['installpath']."/secure/dbconnect.inc.php", $dbconnect);
+	@chmod ($_POST['docroot']."/".$_POST['installpath']."/secure/dbconnect.inc.php", 0644);
+	echo "File <strong>connect.inc.php</strong> successfully written... <span class=\"okay\">OK</span><br />";
 
 	//.htaccess
 
-	$htaccess = file_get_contents("templates/htaccess");
-	$htaccess = preg_replace("/@@INSTALLPATH@@/", $_POST['installpath'], $htaccess);
+	if(isset($_POST['server_software']) AND $_POST['server_software'] == "apache"){
+		$htaccess = file_get_contents("templates/htaccess");
+		$htaccess = preg_replace("/@@INSTALLPATH@@/", $_POST['installpath'], $htaccess);
 
-	file_put_contents("../.htaccess", $htaccess);
-	@chmod ("../.htaccess", 0644);
+		file_put_contents($_POST['docroot']."/".$_POST['installpath']."/.htaccess", $htaccess);
+		@chmod ($_POST['docroot']."/".$_POST['installpath']."/.htaccess", 0644);
 
-	echo "Datei <strong>.htaccess</strong> geschrieben... <span class=\"okay\">OK</span><br />";
+		echo "File <strong>.htaccess</strong> successfully written... <span class=\"okay\">OK</span><br />";
+	}
 
 	//deamon.php
 
 	$deamon = file_get_contents("templates/deamon.php");
-	$deamon = preg_replace("/@@SHEBANG@@/", $_POST['shebang'], $deamon);
+	$deamon = preg_replace("/@@SHEBANG@@/", $_POST['php_executable'], $deamon);
 	$deamon = preg_replace("/@@HOSTNAME@@/", $_POST['hostname'], $deamon);
 	$deamon = preg_replace("/@@DOCROOT@@/", $_POST['docroot'], $deamon);
 	$deamon = preg_replace("/@@INSTALLPATH@@/", $_POST['installpath'], $deamon);
@@ -371,10 +363,10 @@
 	$deamon = preg_replace("/@@DBNAME@@/", $_POST['dbname'], $deamon);
 	$deamon = preg_replace("/@@DBPASS@@/", $_POST['dbpass'], $deamon);
 
-	file_put_contents("../bin/deamon.php", $deamon);
-	@chmod ("../bin/deamon.php", 0755);
+	file_put_contents($_POST['docroot']."/".$_POST['installpath']."/bin/deamon.php", $deamon);
+	@chmod ($_POST['docroot']."/".$_POST['installpath']."/bin/deamon.php", 0755);
 
-	echo "Datei <strong>deamon.php</strong> geschrieben... <span class=\"okay\">OK</span><br />";
+	echo "File <strong>deamon.php</strong> successfully written... <span class=\"okay\">OK</span><br />";
 
 	//dbreader.php
 
@@ -388,12 +380,12 @@
 	$dbreader = preg_replace("/@@DBNAME@@/", $_POST['dbname'], $dbreader);
 	$dbreader = preg_replace("/@@DBPASS@@/", $_POST['dbpass'], $dbreader);
 
-	file_put_contents("../bin/dbreader.php", $dbreader);
-	@chmod ("../bin/dbreader.php", 0755);
+	file_put_contents($_POST['docroot']."/".$_POST['installpath']."/bin/dbreader.php", $dbreader);
+	@chmod ($_POST['docroot']."/".$_POST['installpath']."/bin/dbreader.php", 0755);
 
-	echo "Datei <strong>dbreader.php</strong> geschrieben... <span class=\"okay\">OK</span><br />";
+	echo "File <strong>dbreader.php</strong> successfully written... <span class=\"okay\">OK</span><br />";
 
-	echo "<br /><br /><strong>Installation abgeschlossen - weiter zur <a href=\"/".$_POST['installpath']."/index.php\">Bilddatenbank...</a></strong>";
+	echo "<br /><br /><strong>Installation done - head on to <a href=\"/".$_POST['installpath']."/index.php\">Bilddatenbank...</a></strong>";
 
 }
 

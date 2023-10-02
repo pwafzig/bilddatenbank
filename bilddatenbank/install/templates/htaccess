@@ -1,9 +1,6 @@
 RewriteEngine On
 
-RewriteRule tags/(.*) /@@INSTALLPATH@@/index.php?q=$1&k=yes [L,QSA]
-RewriteRule collection/(.*) /@@INSTALLPATH@@/index.php?q=$1&c=yes&rewrite=true [L,QSA] 
-
 RewriteCond %{REQUEST_FILENAME} !-f
 RewriteCond %{REQUEST_FILENAME} !-d
-RewriteRule . /@@INSTALLPATH@@/index.php?q=%{REQUEST_URI}&rewrite=true [L,QSA]
+RewriteRule . /@@INSTALLPATH@@/index.php?path=%{REQUEST_URI}&rewrite=true [L,QSA]
 
