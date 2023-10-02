@@ -43,7 +43,7 @@ $db_host 	= "@@DBHOST@@";
     {
         global $absdocroot;
         global $installpath;
-        $logname = $absdocroot.$installpath."/logs/deamon.log";
+        $logname = $absdocroot."/".$installpath."/logs/deamon.log";
         $fd = fopen($logname, "a+");
         $msg = "[" . date("d.m.Y H:i:s") . "] " . $msg;
         fwrite($fd, $msg . "\r\n");

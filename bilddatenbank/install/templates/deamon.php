@@ -69,7 +69,7 @@
 	{
 		global $absdocroot;
 		global $installpath;
-		$logname = $absdocroot.$installpath."/logs/deamon.log";
+		$logname = $absdocroot."/".$installpath."/logs/deamon.log";
 		$fd = fopen($logname, "a+");
 		$msg = "[" . date("d.m.Y H:i:s") . "] " . $msg;
 		fwrite($fd, $msg . "\r\n");
@@ -109,12 +109,12 @@
 
 	//Pfade definieren
 
-	$watermark 	= $absdocroot.$installpath."/bin/files/watermark.png";
-	$basedir 	= $absdocroot.$installpath."/uploads";
-	$prevpath 	= $absdocroot.$installpath."/previews/";
-	$lowrespath	= $absdocroot.$installpath."/lowres/";
-	$thumbpath 	= $absdocroot.$installpath."/thumbs/";
-	$datapath 	= $absdocroot.$installpath."/data/";
+	$watermark 	= $absdocroot."/".$installpath."/bin/files/watermark.png";
+	$basedir 	= $absdocroot."/".$installpath."/uploads";
+	$prevpath 	= $absdocroot."/".$installpath."/previews/";
+	$lowrespath	= $absdocroot."/".$installpath."/lowres/";
+	$thumbpath 	= $absdocroot."/".$installpath."/thumbs/";
+	$datapath 	= $absdocroot."/".$installpath."/data/";
 	
 
 	//Verzeichnisse auf Existenz prüfen unf ggf. anlegen
