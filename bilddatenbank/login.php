@@ -15,12 +15,13 @@
 
             $_SESSION['login']          =   $login;
             $_SESSION['name']           =   $result_login['name'];
-            $_SESSION['prename']           =   $result_login['prename'];
+            $_SESSION['prename']        =   $result_login['prename'];
             $_SESSION['downloads']      =   $result_login['downloads'];
             $_SESSION['organisation']   =   $result_login['organisation'];
             $_SESSION['email']          =   $result_login['email'];
             $_SESSION['resolution']     =   $result_login['resolution'];
             $_SESSION['lightboxids']    =   "";
+            $_SESSION['lang']           =   $result_login['lang'];
 
             $stmt_log = "UPDATE users SET lastlogin = NOW( ) WHERE login = '".$login."' LIMIT 1";
             mysqli_query($link, $stmt_log);
