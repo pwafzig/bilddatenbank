@@ -1,9 +1,9 @@
 <?php include("../../php/includes/start.inc.php"); ?>
 <html>
-<?php include(DOCROOT.INSTALLPATH."/php/includes/styles.inc.php"); ?>
-<?php include(DOCROOT.INSTALLPATH."/admin/php/includes/adminstyles.inc.php"); ?>
-<?php include(DOCROOT.INSTALLPATH."/php/includes/scripts.inc.php"); ?>
-<?php include(DOCROOT.INSTALLPATH."/admin/php/includes/adminscripts.inc.php"); ?>
+<?php include(DOCROOT."/".INSTALLPATH."/php/includes/styles.inc.php"); ?>
+<?php include(DOCROOT."/".INSTALLPATH."/admin/php/includes/adminstyles.inc.php"); ?>
+<?php include(DOCROOT."/".INSTALLPATH."/php/includes/scripts.inc.php"); ?>
+<?php include(DOCROOT."/".INSTALLPATH."/admin/php/includes/adminscripts.inc.php"); ?>
 <body>
 
 <table id="bintable" border="0" width="810" height="540">

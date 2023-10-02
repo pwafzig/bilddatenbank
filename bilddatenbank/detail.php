@@ -1,5 +1,5 @@
 <?php include("php/includes/start.inc.php"); ?>
-<?php include(DOCROOT.INSTALLPATH."/php/includes/doctype.inc.php"); ?>
+<?php include(DOCROOT."/".INSTALLPATH."/php/includes/doctype.inc.php"); ?>
 <html>
 <?php
 	mysqli_query($link, "SET CHARACTER SET 'utf8'");
@@ -55,9 +55,9 @@
 	}
 
 ?>
-<?php include(DOCROOT.INSTALLPATH."/php/includes/headsection.inc.php"); ?>
-<?php include(DOCROOT.INSTALLPATH."/php/includes/styles.inc.php"); ?>
-<?php include(DOCROOT.INSTALLPATH."/php/includes/scripts.inc.php"); ?>
+<?php include(DOCROOT."/".INSTALLPATH."/php/includes/headsection.inc.php"); ?>
+<?php include(DOCROOT."/".INSTALLPATH."/php/includes/styles.inc.php"); ?>
+<?php include(DOCROOT."/".INSTALLPATH."/php/includes/scripts.inc.php"); ?>
 <body>
 <table border="0" cellspacing="0" cellpadding="0" width="100%" height="100%">
 	<tr>
@@ -150,7 +150,7 @@
 				<ul id="functions_list">
 				<?php
 					if(isset($_SESSION['login'])){
-						if(is_file(DOCROOT.INSTALLPATH."/data/".$result_popup['filename'])){
+						if(is_file(DOCROOT."/".INSTALLPATH."/data/".$result_popup['filename'])){
 							if(isset($_SESSION['lightboxids'])){
 								$ids = explode("|",$_SESSION['lightboxids']);
 								$anz_ids = sizeof($ids)-1;
@@ -211,6 +211,6 @@
 	</tr>
 </table>
 
-<?php include(DOCROOT.INSTALLPATH."/php/includes/analytics.inc.php"); ?>
+<?php include(DOCROOT."/".INSTALLPATH."/php/includes/analytics.inc.php"); ?>
 </body>
 </html>

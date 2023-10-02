@@ -28,7 +28,7 @@
 		$hour  = substr($value, 8, 2);
 		$min   = substr($value, 10,2);
 		
-		$filesize = filesize(DOCROOT.INSTALLPATH."/admin/backup/".$value);
+		$filesize = filesize(DOCROOT."/".INSTALLPATH."/admin/backup/".$value);
 		$filesize = $filesize / 1024;
 		$filesize = round($filesize, 2);
 		

@@ -50,14 +50,14 @@
             }
 
 			//Ausgabe der Datei an den Browser
-			$filesize = filesize(DOCROOT.INSTALLPATH."/".$res_path."/".$filename);
+			$filesize = filesize(DOCROOT."/".INSTALLPATH."/".$res_path."/".$filename);
 
 			header("Content-Type: image/jpeg");
 			header("Content-Disposition: attachment; filename=".$result_popup['filename']);
 			header("Content-Transfer-Encoding: binary");
 			header("Cache-Control: post-check=0, pre-check=0");
 			header("Content-Length: ".$filesize."");
-			readfile(DOCROOT.INSTALLPATH."/".$res_path."/".$filename);
+			readfile(DOCROOT."/".INSTALLPATH."/".$res_path."/".$filename);
 
 			//Infomail senden
 			$file	 = "http://".$_SERVER['HTTP_HOST']."/".INSTALLPATH."/thumbs/".$filename;
@@ -97,4 +97,4 @@
 	}
 
 ?>
-<?php include(DOCROOT.INSTALLPATH."/php/includes/analytics.inc.php"); ?>
+<?php include(DOCROOT."/".INSTALLPATH."/php/includes/analytics.inc.php"); ?>

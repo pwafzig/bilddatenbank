@@ -7,7 +7,7 @@
         $lang = $_SESSION['lang'];
     }
 
-	include(DOCROOT.INSTALLPATH."/php/lang/$lang.inc.php");
+	include(DOCROOT."/".INSTALLPATH."/php/lang/$lang.inc.php");
 ?>
 <h2><?php echo $TEXT['lightbox-title']?>:</h2>
 <?php

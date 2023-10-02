@@ -20,7 +20,7 @@
 
 	$suchlogs = array();
 
-	$logfile = DOCROOT.INSTALLPATH."/logs/suchergebnis_null.log";
+	$logfile = DOCROOT."/".INSTALLPATH."/logs/suchergebnis_null.log";
 	if (!file_exists($logfile))
 		touch($logfile);
 

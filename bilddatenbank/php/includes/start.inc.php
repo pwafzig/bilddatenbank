@@ -37,7 +37,7 @@
 
 	/**************** Datenbankverbindung herstellen ****************/
 
-	include(DOCROOT.INSTALLPATH."/secure/dbconnect.inc.php");
+	include(DOCROOT."/".INSTALLPATH."/secure/dbconnect.inc.php");
 
     $link = mysqli_connect(DB_HOST, DB_USER, DB_PWD);
     if (!$link) {
@@ -75,7 +75,7 @@
 
 	function logfile($msg,$logfile)
 	{
-		$logname = DOCROOT.INSTALLPATH."/logs/".$logfile.".log";
+		$logname = DOCROOT."/".INSTALLPATH."/logs/".$logfile.".log";
 		$fd = fopen($logname, "a+");
 		$msg = "[" . date("d.m.Y H:i:s") . "] " . $msg;
 		fwrite($fd, $msg . "\r\n");
@@ -151,7 +151,7 @@
         $lang = $_SESSION['lang'];
     }
 
-	include(DOCROOT.INSTALLPATH."/php/lang/$lang.inc.php");
+	include(DOCROOT."/".INSTALLPATH."/php/lang/$lang.inc.php");
 
 
 
