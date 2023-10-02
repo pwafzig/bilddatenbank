@@ -191,15 +191,23 @@ HTTPS check done or dismissed... <span class=\"okay\">OK</span><br />
 <h3>Checking directories</h3>
 <?php
 
-	$directories = array("/bilddatenbank", "/bilddatenbank/bin", "/bilddatenbank/secure", "/bilddatenbank/logs", "/bilddatenbank/temp", "/bilddatenbank/admin/backup", "/bilddatenbank/data", "/bilddatenbank/lowres", "/bilddatenbank/thumbs", "/bilddatenbank/previews"); //TODO: remove /bilddatenbank and make install dire flexible
+	$directories = array("/bilddatenbank", "/bilddatenbank/bin", "/bilddatenbank/secure", "/bilddatenbank/logs", "/bilddatenbank/temp", "/bilddatenbank/admin/backup", "/bilddatenbank/data", "/bilddatenbank/lowres", "/bilddatenbank/thumbs", "/bilddatenbank/previews"); //TODO: remove /bilddatenbank and make install dir flexible
 	$install = true;
 
 	foreach ($directories as $directory) {
+		if(!is_dir($_SERVER['DOCUMENT_ROOT'].$directory)){
+			if (!mkdir($_SERVER['DOCUMENT_ROOT'].$directory, 755, true)) {
+    			echo "Directory ".$directory." could not be written, please check the rights for the webserver user... <span class=\"fault\">ERROR</span><br />";
+    			$install = false;
+			} else {
+				echo "Directory ".$directory." created...  <span class=\"okay\">OK</span><br />";
+			}
+		}
   		if (!is_writeable($_SERVER['DOCUMENT_ROOT'].$directory)) {
     		echo "Directory ".$directory." is not writeable... <span class=\"fault\">ERROR</span><br />";
     		$install = false;
     	} else {
-			echo "Directory ".$directory." is writeable......  <span class=\"okay\">OK</span><br />";
+			echo "Directory ".$directory." is writeable...  <span class=\"okay\">OK</span><br />";
 		}
 	}
 
