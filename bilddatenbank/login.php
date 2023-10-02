@@ -15,6 +15,7 @@
 
             $_SESSION['login']          =   $login;
             $_SESSION['name']           =   $result_login['name'];
+            $_SESSION['prename']           =   $result_login['prename'];
             $_SESSION['downloads']      =   $result_login['downloads'];
             $_SESSION['organisation']   =   $result_login['organisation'];
             $_SESSION['email']          =   $result_login['email'];

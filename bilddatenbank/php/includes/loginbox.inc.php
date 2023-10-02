@@ -1,7 +1,7 @@
 <?php if (isset($_SESSION['login'])) { ?>
 <h2><?php echo $TEXT['login-loginmsg']?></h2>
 <span class="logintext">
-<strong><?php echo $_SESSION['name']?></strong></span><br /><br />
+<strong><?php echo $_SESSION['prename']?> <?php echo $_SESSION['name']?></strong></span><br /><br />
 <?php if($_SESSION['login'] == "probezugang"){ ?>
 <br />
 <?php } ?>
