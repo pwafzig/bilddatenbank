@@ -1,4 +1,4 @@
-<?php include(DOCROOT.INSTALLPATH."/scripts/window.js"); ?>
+<?php include(DOCROOT."/".INSTALLPATH."/scripts/window.js"); ?>
 	<script type="text/javascript" language="javascript">
 	    var http_request = false;
 	    function macheRequest(url) {
