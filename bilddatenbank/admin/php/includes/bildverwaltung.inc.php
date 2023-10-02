@@ -1,8 +1,7 @@
 <?php
     if(!isset($_SESSION['adminlogin'])){
    	   	exit;
-   	}
-   	
+   	} 	
 ?>
 <script language="JavaScript">
 // Markierungen umkehren
@@ -54,19 +53,19 @@ function NixMarkieren(){
     //Abfrage, ob hier gerade eine Suche läuft
     if(!isset($_POST['q'])){
 
-            $stmt_thumbs = "SELECT SQL_CALC_FOUND_ROWS id, filename, headline, photographer, picsize, timestamp FROM picture_data ORDER BY id DESC LIMIT ".$start.",".$anzthumbs."";
+            $stmt_thumbs = "SELECT SQL_CALC_FOUND_ROWS id, filename, headline, photographer, picsize, timestamp FROM picture_data ORDER BY transref DESC, id DESC LIMIT ".$start.",".$anzthumbs."";
             $query_thumbs = mysqli_query($link, $stmt_thumbs);
 
-            $stmt_count_thumbs = "Select FOUND_ROWS()";
+            $stmt_count_thumbs = "SELECT id FROM picture_data";
             $query_count_thumbs = mysqli_query($link, $stmt_count_thumbs);
             $num_files = mysqli_num_rows($query_count_thumbs);
 
     //Wenn ja, dann Suchstatement zusammenbauen
     } else {
-            $stmt_thumbs = "SELECT SQL_CALC_FOUND_ROWS id, filename, headline, photographer, picsize, timestamp FROM picture_data WHERE MATCH (filename, caption, headline, photographer, city, state, country, keywords, location) AGAINST ('*".$_POST['q']."*' IN BOOLEAN MODE) ORDER BY id DESC LIMIT ".$start.",".$anzthumbs."";
+            $stmt_thumbs = "SELECT SQL_CALC_FOUND_ROWS id, filename, headline, photographer, picsize, timestamp FROM picture_data WHERE MATCH (filename, caption, headline, photographer, city, state, country, keywords, location) AGAINST ('*".$_POST['q']."*' IN BOOLEAN MODE) ORDER BY id DESC";
             $query_thumbs = mysqli_query($link, $stmt_thumbs);
 
-            $stmt_count_thumbs = "Select FOUND_ROWS()";
+            $stmt_count_thumbs = "SELECT id FROM picture_data WHERE MATCH (filename, caption, headline, photographer, city, state, country, keywords, location) AGAINST ('*".$_POST['q']."*' IN BOOLEAN MODE)";
             $query_count_thumbs = mysqli_query($link, $stmt_count_thumbs);
             $num_files = mysqli_num_rows($query_count_thumbs);
 
@@ -141,7 +140,9 @@ function NixMarkieren(){
         $pagination .= "<span class=\"inactive\">".$TEXT['page-next']."</span>";
     }
     
-	echo "<div class=\"pagination\">".$pagination."</div><br /><br />";
+	if(!isset($_POST['q'])){
+        echo "<div class=\"pagination\">".$pagination."</div><br /><br />";
+    }
 	echo $html;
 
 ?>
