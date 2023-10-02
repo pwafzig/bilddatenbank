@@ -191,7 +191,7 @@ HTTPS check done or dismissed... <span class=\"okay\">OK</span><br />
 <h3>Checking directories</h3>
 <?php
 
-	$directories = array("/bilddatenbank", "/bilddatenbank/bin", "/bilddatenbank/secure", "/bilddatenbank/logs", "/bilddatenbank/temp", "/bilddatenbank/admin/backup", "/bilddatenbank/data", "/bilddatenbank/lowres", "/bilddatenbank/thumbs", "/bilddatenbank/previews"); //TODO: remove /bilddatenbank and make install dir flexible
+	$directories = array("/bilddatenbank", "/bilddatenbank/bin", "/bilddatenbank/secure", "/bilddatenbank/logs", "/bilddatenbank/temp", "/bilddatenbank/admin/backup", "/bilddatenbank/data", "/bilddatenbank/lowres", "/bilddatenbank/thumbs", "/bilddatenbank/previews", "/bilddatenbank/uploads"); //TODO: remove /bilddatenbank and make install dir flexible
 	$install = true;
 
 	foreach ($directories as $directory) {
