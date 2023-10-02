@@ -293,7 +293,7 @@ HTTPS check done or dismissed... <span class=\"okay\">OK</span><br />
 		$result = mysqli_query($link, $imp);
 
 			if(!$result) {
-				echo "Database file could not be imported... <span class=\"fault\">ERROR</span><br /><pre>".mysqli_error()."</pre>";
+				echo "Database file could not be imported... <span class=\"fault\">ERROR</span><br /><pre>".mysqli_error($link)."</pre>";
 				exit;
 			} else {
 				$out = "Database import... <span class=\"okay\">OK</span><br />";

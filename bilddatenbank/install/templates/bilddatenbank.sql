@@ -12,7 +12,7 @@ CREATE TABLE `accessids` (
   `timestamp` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `lastlogin` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB;
 
 DROP TABLE IF EXISTS `collections`;
 CREATE TABLE `collections` (
@@ -21,7 +21,7 @@ CREATE TABLE `collections` (
   `comment` text NOT NULL,
   `ids` text NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB;
 
 DROP TABLE IF EXISTS `downloads`;
 CREATE TABLE `downloads` (
@@ -32,7 +32,7 @@ CREATE TABLE `downloads` (
   `ip` varchar(15) NOT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `id` (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB;
 
 DROP TABLE IF EXISTS `konfig`;
 CREATE TABLE `konfig` (
@@ -41,7 +41,7 @@ CREATE TABLE `konfig` (
   `key` text NOT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `id` (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB;
 
 INSERT INTO `konfig` (`id`, `value`, `key`) VALUES
 (1, 'name', ''),
@@ -100,7 +100,7 @@ CREATE TABLE `picture_data` (
   KEY `date` (`date`),
   KEY `time` (`time`),
   FULLTEXT KEY `filename` (`filename`,`caption`,`headline`,`photographer`,`city`,`state`,`country`,`keywords`,`location`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB;
 
 DROP TABLE IF EXISTS `users`;
 CREATE TABLE `users` (
@@ -117,4 +117,4 @@ CREATE TABLE `users` (
   `timestamp` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `lastlogin` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB;
