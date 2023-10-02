@@ -338,16 +338,30 @@ HTTPS check done or dismissed... <span class=\"okay\">OK</span><br />
 	@chmod ($_POST['docroot']."/".$_POST['installpath']."/secure/dbconnect.inc.php", 0644);
 	echo "File <strong>connect.inc.php</strong> successfully written... <span class=\"okay\">OK</span><br />";
 
-	//.htaccess
+	//.htaccess for rewrites
 
 	if(isset($_POST['server_software']) AND $_POST['server_software'] == "apache"){
-		$htaccess = file_get_contents("templates/htaccess");
-		$htaccess = preg_replace("/@@INSTALLPATH@@/", $_POST['installpath'], $htaccess);
+		$htaccess_rewrite = file_get_contents("templates/htaccess-rewrite");
+		$htaccess_rewrite = preg_replace("/@@INSTALLPATH@@/", $_POST['installpath'], $htaccess_rewrite);
 
-		file_put_contents($_POST['docroot']."/".$_POST['installpath']."/.htaccess", $htaccess);
+		file_put_contents($_POST['docroot']."/".$_POST['installpath']."/.htaccess", $htaccess_rewrite);
 		@chmod ($_POST['docroot']."/".$_POST['installpath']."/.htaccess", 0644);
 
-		echo "File <strong>.htaccess</strong> successfully written... <span class=\"okay\">OK</span><br />";
+		echo "File <strong>.htaccess</strong> for rewrites successfully written... <span class=\"okay\">OK</span><br />";
+	}
+
+	//.htaccess for lowres and data dirs
+
+	if(isset($_POST['server_software']) AND $_POST['server_software'] == "apache"){
+		$htaccess = file_get_contents("templates/htaccess-safedirs");
+
+		file_put_contents($_POST['docroot']."/".$_POST['installpath']."/data/.htaccess", $htaccess);
+		@chmod ($_POST['docroot']."/".$_POST['installpath']."/data/.htaccess", 0644);
+
+		file_put_contents($_POST['docroot']."/".$_POST['installpath']."/lowres/.htaccess", $htaccess);
+		@chmod ($_POST['docroot']."/".$_POST['installpath']."/lowres/.htaccess", 0644);
+
+		echo "File <strong>.htaccess</strong> for safe download dirs successfully written... <span class=\"okay\">OK</span><br />";
 	}
 
 	//deamon.php
