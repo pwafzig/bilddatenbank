@@ -1,5 +1,4 @@
-<Files ~ "^\.(htaccess|htpasswd)$">
-deny from all
+<Files ~ "\.jpg|JPG$">
+    Order allow,deny
+    Deny from all
 </Files>
-Options Indexes
-order deny,allow
