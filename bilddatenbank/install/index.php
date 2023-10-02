@@ -196,7 +196,7 @@ HTTPS check done or dismissed... <span class=\"okay\">OK</span><br />
 
 	foreach ($directories as $directory) {
 		if(!is_dir($_SERVER['DOCUMENT_ROOT'].$directory)){
-			if (!mkdir($_SERVER['DOCUMENT_ROOT'].$directory, 755, true)) {
+			if (!mkdir($_SERVER['DOCUMENT_ROOT'].$directory, 0755, true)) {
     			echo "Directory ".$directory." could not be written, please check the rights for the webserver user... <span class=\"fault\">ERROR</span><br />";
     			$install = false;
 			} else {
