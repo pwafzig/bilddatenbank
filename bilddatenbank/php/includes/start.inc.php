@@ -2,14 +2,14 @@
 
 	/**************** Basiskonfiguration einlesen *****************/
 
-	$installcheck = file_get_contents($_SERVER['DOCUMENT_ROOT']."/config.inc.php");
-	if(preg_match("/@@/", $installcheck)) {
-		include("lib/notfound.html");
-        exit;
+	//Check current directory
+    $current_dir = basename(getcwd());
+
+    if(!is_file($_SERVER['DOCUMENT_ROOT'])."/config.inc.php"){
+        header("Location:/".$current_dir."/install/");
     } else {
 		include($_SERVER['DOCUMENT_ROOT']."/config.inc.php");
 	}
-
 
 
     /**************** Error-Reporting einstellen *****************/
