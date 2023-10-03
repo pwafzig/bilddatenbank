@@ -5,7 +5,7 @@
 	//Check current directory
     $current_dir = basename(getcwd());
 
-    if(!is_file($_SERVER['DOCUMENT_ROOT'])."/config.inc.php"){
+    if(!is_file($_SERVER['DOCUMENT_ROOT']."/config.inc.php")){
         header("Location:/".$current_dir."/install/");
     } else {
 		include($_SERVER['DOCUMENT_ROOT']."/config.inc.php");
