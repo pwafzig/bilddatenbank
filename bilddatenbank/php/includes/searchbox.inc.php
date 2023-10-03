@@ -1,4 +1,4 @@
-<div id="homebutton"><a href="/<?php echo INSTALLPATH; ?>/"><img src="/<?php echo INSTALLPATH; ?>/images/homebutton.gif" title="<?php echo $TEXT['detail-overview']; ?>" border="0"></a></div>
+<div id="homebutton"><a href="/<?php echo INSTALLPATH; ?>"><img src="/<?php echo INSTALLPATH; ?>/images/homebutton.gif" title="<?php echo $TEXT['detail-overview']; ?>" border="0"></a></div>
 <?php
 
 	if(isset($_GET['q'])){
