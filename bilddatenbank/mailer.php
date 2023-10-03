@@ -70,7 +70,7 @@
 		    $mail->addReplyTo($CONFIG['sendemail'], $CONFIG['firma']);
 		    
 		    //Attachments
-		    $mail->addAttachment($_SERVER['DOCUMENT_ROOT'].'/bilddatenbank/'.$res_path.'/'.$filename);
+		    $mail->addAttachment($_SERVER['DOCUMENT_ROOT'].'/'.INSTALLPATH.'/'.$res_path.'/'.$filename);
 
 		    //Content
 		    $mail->Subject = 'Bildzusendung Bild Nr. '.$result_popup['id'].'';

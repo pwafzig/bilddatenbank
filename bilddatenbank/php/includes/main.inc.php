@@ -24,7 +24,7 @@
 	//Rewrite-Suche
 	if(isset($_GET['rewrite'])){
 		$path = mysqli_real_escape_string($link, $_GET['path']);
-		$path = preg_replace("/\/bilddatenbank\//", "", $path);
+		$path = preg_replace("/\/".INSTALLPATH."\//", "", $path);
 
 		$stmt_thumbs = "SELECT id, filename, headline, keywords, object_name, caption, transref, photographer, date, city, picsize FROM picture_data WHERE transref = '$path' ORDER BY id ASC LIMIT 0,".$maxfiles."";
 		$query_thumbs = mysqli_query($link, $stmt_thumbs);

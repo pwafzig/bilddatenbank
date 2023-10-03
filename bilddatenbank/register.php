@@ -2,8 +2,8 @@
 <html>
 <head>
 	<title>Registrierung</title>
-	<script type="text/javascript" src="/bilddatenbank/lib/jquery/jquery.min.js" language="javascript"></script>
-	<script type="text/javascript" src="/bilddatenbank/lib/jquery-validate/jquery.validate.pack.js" language="javascript"></script>
+	<script type="text/javascript" src="/<?php echo INSTALLPATH; ?>/lib/jquery/jquery.min.js" language="javascript"></script>
+	<script type="text/javascript" src="/<?php echo INSTALLPATH; ?>/lib/jquery-validate/jquery.validate.pack.js" language="javascript"></script>
 	<style>
 		body {
 			font-family: Verdana, Arial, Sans-Serif;

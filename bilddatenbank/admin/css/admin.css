@@ -59,7 +59,7 @@
  ***********************************************************/
 
 th.header {
-	background-image: url('/bilddatenbank/admin/images/sort.gif');
+	background-image: url('images/sort.gif');
 	cursor: pointer;
 	font-weight: bold;
 	background-repeat: no-repeat;
@@ -69,12 +69,12 @@ th.header {
 }
 
 th.headerSortUp {
-	background-image: url('/bilddatenbank/admin/images/asc.gif');
+	background-image: url('images/asc.gif');
 	background-color: #deeaf4;
 }
 
 th.headerSortDown {
-	background-image: url('/bilddatenbank/admin/images/desc.gif');
+	background-image: url('images/desc.gif');
 	background-color: #deeaf4;
 }
 
