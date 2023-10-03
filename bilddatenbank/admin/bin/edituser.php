@@ -17,9 +17,9 @@
 		if(isset($_POST['sent']) && $_POST['sent'] == "yes"){
 
 			if($_POST['password'] != "faked"){
-				$stmt = "UPDATE users SET login = '".$_POST['login']."', passwort = MD5( '".$_POST['password']."'), name = '".$_POST['name']."', prename = '".$_POST['prename']."', organisation = '".$_POST['organisation']."', email = '".$_POST['email']."', resolution = '".$_POST['resolution']."' WHERE id = ".$_POST['id']." LIMIT 1";
+				$stmt = "UPDATE users SET login = '".$_POST['login']."', passwort = MD5( '".$_POST['password']."'), name = '".$_POST['name']."', prename = '".$_POST['prename']."', organisation = '".$_POST['organisation']."', email = '".$_POST['email']."', resolution = '".$_POST['resolution']."', lang = '".$_POST['lang']."' WHERE id = ".$_POST['id']." LIMIT 1";
 			} else {
-				$stmt = "UPDATE users SET login = '".$_POST['login']."', name = '".$_POST['name']."', prename = '".$_POST['prename']."', organisation = '".$_POST['organisation']."', email = '".$_POST['email']."', resolution = '".$_POST['resolution']."' WHERE id = ".$_POST['id']." LIMIT 1";
+				$stmt = "UPDATE users SET login = '".$_POST['login']."', name = '".$_POST['name']."', prename = '".$_POST['prename']."', organisation = '".$_POST['organisation']."', email = '".$_POST['email']."', resolution = '".$_POST['resolution']."', lang = '".$_POST['lang']."' WHERE id = ".$_POST['id']." LIMIT 1";
 			}
 
 			$query = mysqli_query($link, $stmt);
@@ -109,7 +109,7 @@
         			</dl>
         			<dl>
         				<dt><label for="lang">Sprache:</label></dt>
-            			<dd><input type="radio" name="lang" id="lang" value="de" /> DE&nbsp;<input type="radio" name="lang" id="lang" value="en" /> EN</dd>
+            			<dd><input type="radio" name="lang" id="lang" value="de" <?php if($out[7]=="de"){ echo "checked"; } ?> /> DE&nbsp;<input type="radio" name="lang" id="lang" value="en" <?php if($out[7]=="en"){ echo "checked"; } ?> /> EN</dd>
         			</dl>
 					<dl>
         				<dt><label for="login">Login:</label></dt>
@@ -304,7 +304,7 @@
         			</dl>
 					<dl>
         				<dt><label for="lang">Sprache:</label></dt>
-            			<dd><input type="radio" name="lang" id="lang" value="de" /> DE&nbsp;<input type="radio" name="lang" id="lang" value="en" /> EN</dd>
+            			<dd><input type="radio" name="lang" id="lang" value="de" checked /> DE&nbsp;<input type="radio" name="lang" id="lang" value="en" /> EN</dd>
         			</dl>
 					<dl>
         				<dt><label for="login">Login:</label></dt>
@@ -320,7 +320,7 @@
         			</dl>
 					<dl>
         				<dt><label for="highres">Download:</label></dt>
-            			<dd><input type="radio" name="resolution" id="resolution" value="highres" /> Originale&nbsp;<input type="radio" name="resolution" id="resolution" value="lowres" /> Web-Auflösung</dd>
+            			<dd><input type="radio" name="resolution" id="resolution" value="highres" checked /> Originale&nbsp;<input type="radio" name="resolution" id="resolution" value="lowres" /> Web-Auflösung</dd>
         			</dl>        			
 			</fieldset>
 			<fieldset class="action">
