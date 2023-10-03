@@ -1,6 +1,6 @@
 <html>
 <head>
-	<title>Installationsroutine Bilddatenbank</title>
+	<title>Installation</title>
 	<meta charset="utf-8" />
 	<style>
 		body {
@@ -80,7 +80,16 @@
 <h1>Installation</h1>
 <div id="main">
 
-<?php if(!isset($_POST['submit'])) { ?>
+<?php if(!isset($_POST['submit'])) { 
+
+	//find executable
+	$php_executable = PHP_BINDIR."/php"; 
+	//find installpath
+	$installpath = $_SERVER['PHP_SELF'];
+	$installpath = explode("/",$installpath);
+	$installpath = $installpath[1];
+
+?>
 
 <h3>Checking your basic server configuration</h3>
 <p><?php
@@ -88,7 +97,7 @@
 	if (substr($_SERVER['DOCUMENT_ROOT'], -1) != '/'){
 		echo "Your DOCUMENT_ROOT variable has no trailing slash... <span class=\"okay\">OK</span><br />";
 	} else {
-		echo "Your DOCUMENT_ROOT variable contains a trailing slash (e.g. /var/www/bilddatenbank/) <span class=\"fault\">this is a non-standard configuration</span> please remove the trailing slash before continuing...<br />";
+		echo "Your DOCUMENT_ROOT variable contains a trailing slash (e.g. /var/www/".$installpath."/) <span class=\"fault\">this is a non-standard configuration</span> please remove the trailing slash before continuing...<br />";
 		echo "<br /><button name=\"reload\" class=\"retry\" onClick=\"window.location.reload();\">Retry...</button>";
 		exit;
 	} 
@@ -151,12 +160,17 @@ HTTPS check done or dismissed... <span class=\"okay\">OK</span><br />
 	} elseif (preg_match("/nginx/i", $_SERVER["SERVER_SOFTWARE"])){
 		$server_software = "nginx";
 		echo "You are using nginx... ";
-		echo "<strong>Make sure your server configuration uses the following redirect:</strong><br /><br />";
+		echo "<strong>Make sure your server configuration looks like this:</strong><br /><br />";
 	?>
 	<pre>
 		<code>location / {
-  try_files $uri $uri/ /bilddatenbank/index.php?path=$request_uri&rewrite=true;
-}</code>
+  try_files $uri $uri/ /<?php echo $installpath; ?>/index.php?path=$request_uri&rewrite=true;
+}
+
+location ~ /<?php echo $installpath; ?>/data|lowres\.jpg|JPG$ {
+  deny all;
+}
+</code>
     </pre>
 
 <?php }
@@ -191,7 +205,7 @@ HTTPS check done or dismissed... <span class=\"okay\">OK</span><br />
 <h3>Checking directories</h3>
 <?php
 
-	$directories = array("/bilddatenbank", "/bilddatenbank/bin", "/bilddatenbank/secure", "/bilddatenbank/logs", "/bilddatenbank/temp", "/bilddatenbank/admin/backup", "/bilddatenbank/data", "/bilddatenbank/lowres", "/bilddatenbank/thumbs", "/bilddatenbank/previews", "/bilddatenbank/uploads"); //TODO: remove /bilddatenbank and make install dir flexible
+	$directories = array("/".$installpath, "/".$installpath."/bin", "/".$installpath."/secure", "/".$installpath."/logs", "/".$installpath."/temp", "/".$installpath."/admin/backup", "/".$installpath."/data", "/".$installpath."/lowres", "/".$installpath."/thumbs", "/".$installpath."/previews", "/".$installpath."/uploads");
 	$install = true;
 
 	foreach ($directories as $directory) {
@@ -222,15 +236,6 @@ HTTPS check done or dismissed... <span class=\"okay\">OK</span><br />
 <p>
 <form action="<?php echo $_SERVER['PHP_SELF']; ?>" method="POST" name="install" id="install">
 <input type="hidden" name="server_software" value="<?php echo $server_software; ?>">
-
-<?php
-	//find executable
-	$php_executable = PHP_BINDIR."/php"; 
-	//find installpath
-	$installpath = $_SERVER['PHP_SELF'];
-	$installpath = explode("/",$installpath);
-	$installpath = $installpath[1];
-?>
 
 <input type="hidden" name="php_executable" size="90" value="<?php echo $php_executable; ?>">
 
