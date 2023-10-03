@@ -77,7 +77,7 @@ function NixMarkieren(){
 
     //Produktion der Thumbnails
     if($num_files == 0){
-        $html .= "<tr><td colspan=\"5\" height=\"350\">".$no_search_results."</td></tr>";
+        $html .= "<tr><td colspan=\"7\" height=\"350\">".$TEXT['search-noresults']."</td></tr>";
     } else {
         while ($out = mysqli_fetch_array($query_thumbs, MYSQLI_ASSOC)){
         	$html .= "<tr><td align=\"center\">".$out['id']."</td>";
