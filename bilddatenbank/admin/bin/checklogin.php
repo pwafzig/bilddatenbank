@@ -1,24 +1,15 @@
 <?php include("../../php/includes/start.inc.php"); ?>
 <?php
 
-	/****** Macht nur Probleme, die Variablen werden nicht korrekt interpretiert ******
-	//Ajax Check:
-	if(isset($_SERVER['HTTP_X_REQUESTED_WITH'])){
-		$ajaxcheck = "ok";
-	} else if (isset($_SERVER['X-Requested-With'])){
-		$ajaxcheck = "ok";
-	}
-	 ****** Deswegen in der nächsten Zeile ein kleiner Override... ******/
-
-	$ajaxcheck = "ok";
+  	$ajaxcheck = "ok";
     $message = '';
     $error = array();
 
    	//DB-Connect, um vergebene Usernamen zu prüfen
    	$stmt = "SELECT login FROM users";
-   	$query = mysql_query($stmt);
+   	$query = mysqli_query($link, $stmt);
 
-   	while($out = mysql_fetch_array($query)){
+   	while($out = mysqli_fetch_array($query, MYSQLI_ASSOC)){
 		$taken_usernames[] = $out['login'];
    	}
 
@@ -40,7 +31,10 @@
     }
 
 	// main submit logic
-	echo json_encode(check_username($_REQUEST['username']));
-	exit; // only print out the json version of the response
+  if(isset($_POST['username'])){ 
+    $username = mysqli_real_escape_string($link, $_POST['username']);
 
+    echo json_encode(check_username($username));
+    exit; // only print out the json version of the response
+  }
 ?>
