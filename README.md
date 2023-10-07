@@ -33,12 +33,12 @@ Als Vorbereitung zur Installation muss geklärt werden, ob der Webserver die not
 - Shellzugang mit Webserverrechten
 - Verwaltung der Datenbanken
 
-### Know Bugs
+### Known Bugs
 
-- Kompatibilität zu neueren PHP-Versionen (>= PHP 7)
-- jQuery und phpMailer Versionen veraltet
+- ~~Kompatibilität zu neueren PHP-Versionen (>= PHP 7)~~ fixed
+- jQuery und ~~phpMailer Versionen~~ veraltet
 - Absicherung Adminbereich (Empfehlung: .htaccess-Schutz auf /admin)
-- ~~Stabilität Bildimport daemon.php - bei leeren IPTC-Felder ist der Import nicht ausreichend fehlertolerant~~
+- ~~Stabilität Bildimport daemon.php - bei leeren IPTC-Felder ist der Import nicht ausreichend fehlertolerant~~ fixed
 
 ### Installation
 
